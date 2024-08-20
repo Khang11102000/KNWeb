@@ -1,0 +1,4 @@
+export const UNAUTHORIZE_ERROR_STATUS = 401
+export const FORBIDDEN_ERROR_STATUS = 403
+export const CREATED_SUCCESS_STATUS = 201
+export const OK_STATUS = 200
