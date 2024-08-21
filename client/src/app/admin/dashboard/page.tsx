@@ -1,9 +1,7 @@
 import React from 'react'
 
-type Props = {}
-
-const DashBoardPage = (props: Props) => {
-  return <>DashBoardPage</>
+const DashboardPage = () => {
+  return <div>DashboardPage</div>
 }
 
-export default DashBoardPage
+export default DashboardPage
