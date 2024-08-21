@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons'
 import { Layout, Menu } from 'antd'
 import type { GetProp, MenuProps } from 'antd'
+import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
 
 const { Sider } = Layout
 
@@ -22,11 +23,11 @@ const items: MenuItem[] = [
   {
     key: '1',
     icon: <AppstoreOutlined />,
-    label: <Link href='/admin/dashboard'>Dashboard</Link>
+    label: <Link href={PRIVATE_ROUTES.ADMIN.DASHBOARD}>Dashboard</Link>
   },
   {
     key: 'sub1',
-    label: <Link href='/admin/dashboard'>Manage User</Link>,
+    label: <Link href={PRIVATE_ROUTES.ADMIN.MANAGE_USERS}>Manage Users</Link>,
     icon: <UserOutlined />,
     children: [
       { key: '3', label: 'Option 3' },
@@ -35,7 +36,7 @@ const items: MenuItem[] = [
   },
   {
     key: 'sub2',
-    label: 'Manage Posts',
+    label: <Link href={PRIVATE_ROUTES.ADMIN.MANAGE_POST}>Manage Posts</Link>,
     icon: <BookOutlined />,
     children: [
       { key: '7', label: 'Option 7' },
@@ -48,21 +49,9 @@ const items: MenuItem[] = [
 
 const AdminSideBar = () => {
   return (
-    <Sider
-      breakpoint='lg'
-      collapsedWidth='0'
-      onBreakpoint={(broken) => {
-        console.log(broken)
-      }}
-      onCollapse={(collapsed, type) => {
-        console.log(collapsed, type)
-      }}
-      // trigger={null}
-      // collapsible
-      // collapsed={isCollapsed}
-    >
+    <Sider breakpoint='lg' collapsedWidth='0'>
       <Link
-        href='/'
+        href={PRIVATE_ROUTES.ADMIN.DASHBOARD}
         style={{
           display: 'flex',
           justifyContent: 'center',
@@ -72,13 +61,8 @@ const AdminSideBar = () => {
       >
         Admin Workspace
       </Link>
-      <Menu
-        theme='dark'
-        mode='inline'
-        defaultSelectedKeys={['4']}
-        defaultOpenKeys={['sub1']}
-        items={items}
-      />
+
+      <Menu theme='dark' mode='inline' items={items} />
     </Sider>
   )
 }
