@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
-import { cookies } from 'next/headers'
-import '@/styles/globals.scss'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
+import '@/styles/globals.scss'
 
 const roboto = Roboto({
   subsets: ['vietnamese', 'latin'],
