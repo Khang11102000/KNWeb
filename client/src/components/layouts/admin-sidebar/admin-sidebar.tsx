@@ -1,20 +1,11 @@
-import React from 'react'
-import Link from 'next/link'
-import {
-  LaptopOutlined,
-  NotificationOutlined,
-  UserOutlined,
-  AppstoreOutlined,
-  CalendarOutlined,
-  LinkOutlined,
-  MailOutlined,
-  SettingOutlined,
-  BookOutlined
-} from '@ant-design/icons'
-import { Layout, Menu } from 'antd'
+'use client'
+import { AppstoreOutlined, BookOutlined, UserOutlined } from '@ant-design/icons'
 import type { GetProp, MenuProps } from 'antd'
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
-
+import { Layout, Menu } from 'antd'
+import Link from 'next/link'
+import { useState } from 'react'
+import { PRIVATE_ROUTES } from '@/constants/routes'
+import './AdminSideBar.scss'
 const { Sider } = Layout
 
 type MenuItem = GetProp<MenuProps, 'items'>[number]
@@ -48,6 +39,10 @@ const items: MenuItem[] = [
 ]
 
 const AdminSideBar = () => {
+  const [current, setCurrent] = useState<string>('')
+  const _onClick: MenuProps['onClick'] = (e) => {
+    setCurrent(e.key)
+  }
   return (
     <Sider breakpoint='lg' collapsedWidth='0'>
       <Link
@@ -62,7 +57,13 @@ const AdminSideBar = () => {
         Admin Workspace
       </Link>
 
-      <Menu theme='dark' mode='inline' items={items} />
+      <Menu
+        theme='dark'
+        mode='inline'
+        items={items}
+        defaultOpenKeys={[current]}
+        onClick={_onClick}
+      />
     </Sider>
   )
 }
