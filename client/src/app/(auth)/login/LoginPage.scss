@@ -1,0 +1,14 @@
+.login-page {
+  padding: 46px 40px 26px;
+  border: 1px solid rgb(219, 219, 219);
+
+  .ant-form {
+    &-item-label {
+      text-align: start !important;
+    }
+  }
+
+  .ant-input {
+    width: 100%;
+  }
+}
