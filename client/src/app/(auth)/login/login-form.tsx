@@ -10,11 +10,9 @@ import { useRouter } from 'next/navigation'
 type FieldType = {
   email: string
   password: string
-  // remember?: string
 }
 
 const LoginForm = () => {
-  // Init
   const router = useRouter()
 
   // Events Handler
@@ -26,6 +24,8 @@ const LoginForm = () => {
         password: values.password,
         redirect: false
       })
+
+      console.log('🚀res---->', res)
 
       if (!res?.ok) {
         throw new Error(res?.error || 'Something went wrong')
@@ -57,8 +57,6 @@ const LoginForm = () => {
     <Form
       layout='vertical'
       labelCol={{ span: 8 }}
-      // style={{ maxWidth: 600, marginTop: 30 }}
-      // initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete='off'
@@ -91,14 +89,6 @@ const LoginForm = () => {
       >
         <Input.Password />
       </Form.Item>
-
-      {/* <Form.Item<FieldType>
-        name='remember'
-        valuePropName='checked'
-        wrapperCol={{ offset: 8, span: 16 }}
-      >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item> */}
 
       <Form.Item>
         <Button type='primary' htmlType='submit' style={{ width: '100%' }}>

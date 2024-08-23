@@ -1,28 +1,17 @@
 'use client'
 import { AdminFooter, AdminHeader, AdminSidebar } from '@/components/layouts'
-import {
-  LaptopOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  NotificationOutlined,
-  UserOutlined
-} from '@ant-design/icons'
-import { Button, Layout, Menu, theme, type MenuProps } from 'antd'
-import Link from 'next/link'
-import React, { useState } from 'react'
+import { Layout } from 'antd'
+import { useSession } from 'next-auth/react'
+import React from 'react'
 
-const { Header, Content, Footer, Sider } = Layout
+const { Content } = Layout
 
 const AdminLayout = ({
   children
 }: Readonly<{
   children: React.ReactNode
 }>) => {
-  // const {
-  //   token: { colorBgContainer, borderRadiusLG }
-  // } = theme.useToken()
-
-  // const [collapsed, setCollapsed] = useState<boolean>(false)
+  const { data: session, status } = useSession()
 
   return (
     <Layout style={{ height: '100vh' }}>
