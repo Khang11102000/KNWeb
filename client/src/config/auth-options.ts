@@ -2,7 +2,7 @@ import envConfig from '@/config/environment'
 import HTTP_STATUS_CODES from '@/constants/http-status-codes'
 import { PUBLIC_ROUTES } from '@/constants/routes'
 import authService from '@/services/auth-service'
-import { ILoginPayload } from '@/types/auth-type'
+import { ILoginPayload, ILoginResponse } from '@/types/auth-type'
 import { IUser } from '@/types/user-type'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
-  secret: envConfig.NEXTAUTH_SECRET,
+  secret: envConfig.NEXT_PUBLIC_NEXTAUTH_SECRET,
   pages: {
     signIn: PUBLIC_ROUTES.LOGIN
   },
@@ -41,13 +41,21 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       // Persist the OAuth access_token to the token right after
       if (user) {
-        token.user = user as IUser
+        token.refreshToken = user.refreshToken
+        token.token = user.token
+        token.tokenExpires = user.tokenExpires
+        token.user = user.user
       }
       return token
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       // Send properties to the client, like an access_token from a provider.
-      session.user = token.user
+      if (session.user) {
+        session.refreshToken = token.refreshToken
+        session.token = token.token
+        session.tokenExpires = token.tokenExpires
+        session.user = token.user
+      }
       return session
     }
   }
