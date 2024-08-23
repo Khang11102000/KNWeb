@@ -1,6 +1,5 @@
 import envConfig from '@/config/environment'
 import { RequestCustomOptions } from '@/types/http-type'
-import ApiError from '@/utils/ApiError'
 
 const request = async <Response>(
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
