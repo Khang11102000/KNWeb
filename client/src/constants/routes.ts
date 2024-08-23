@@ -1,5 +1,7 @@
 export const PUBLIC_ROUTES = {
-  HOME: '/'
+  HOME: '/',
+  LOGIN: '/login',
+  REGISTER: '/register'
 }
 
 const ADMIN_ROUTE = '/admin'
