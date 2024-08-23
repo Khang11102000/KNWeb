@@ -11,7 +11,7 @@ const HomePage = () => {
         alignItems: 'center'
       }}
     >
-      <h1>WELLCOME TO KN WEB</h1>
+      <h1>WELLCOME TO KN WEBSITE</h1>
       <Link href={PRIVATE_ROUTES.ADMIN.DASHBOARD}>Go to admin dashboard</Link>
     </div>
   )
