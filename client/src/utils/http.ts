@@ -1,4 +1,5 @@
 import envConfig from '@/config/environment'
+import HTTP_STATUS_CODES from '@/constants/http-status-codes'
 import { RequestCustomOptions } from '@/types/http-type'
 
 const request = async <Response>(
@@ -26,16 +27,23 @@ const request = async <Response>(
     }
   })
 
-  // Data Response From Server
-  const data: Response = await res.json()
+  console.log('🚀res from http---->', res)
+  console.log('🚀res from http---->', body)
+  // const data: Response = await res.json()
+  // return data
 
-  // Fetch Data Failed
-  // if (!res.ok) {
-  //   throw new ApiError({ status: res.status, data })
-  // } else {
-  //   // Fetch Data Succeed
+  // // Data Response From Server
+  // if (res.status !== HTTP_STATUS_CODES.NO_CONTENT.statusCode) {
   // }
-  return data
+
+  if (res.status === 204) {
+    return {
+      statusCode: 204,
+      message: 'Success'
+    }
+  }
+
+  return await res.json()
 }
 
 const http = {

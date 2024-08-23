@@ -1,7 +1,6 @@
 'use client'
 import { AdminFooter, AdminHeader, AdminSidebar } from '@/components/layouts'
 import { Layout } from 'antd'
-import { useSession } from 'next-auth/react'
 import React from 'react'
 
 const { Content } = Layout
@@ -11,8 +10,6 @@ const AdminLayout = ({
 }: Readonly<{
   children: React.ReactNode
 }>) => {
-  const { data: session, status } = useSession()
-
   return (
     <Layout style={{ height: '100vh' }}>
       <AdminSidebar />

@@ -1,21 +1,27 @@
+import { ILoginResponse } from '@/types/auth-type'
 import { IUser } from '@/types/user-type'
+import { DefaultSession, DefaultUser } from 'next-auth'
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    access_token: string
-    refresh_token: string
+    refreshToken: string
+    token: string
+    tokenExpires: Date
     user: IUser
-    access_expire: number
-    error: string
   }
 }
 
 declare module 'next-auth' {
+  interface User {
+    refreshToken: string
+    token: string
+    tokenExpires: Date
+    user: IUser & DefaultUser
+  }
   interface Session {
-    user: IUser
-    access_token: string
-    refresh_token: string
-    access_expire: number
-    error: string
+    refreshToken: string
+    token: string
+    tokenExpires: Date
+    user: IUser & DefaultSession['user']
   }
 }
