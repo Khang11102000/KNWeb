@@ -3,7 +3,7 @@ import HTTP_STATUS_CODES from '@/constants/http-status-codes'
 import { PUBLIC_ROUTES } from '@/constants/routes'
 import authService from '@/services/auth-service'
 import { ILoginPayload, ILoginResponse } from '@/types/auth-type'
-import { IUser } from '@/types/user-type'
+import { IUser, UserStatusEnum } from '@/types/user-type'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
@@ -21,15 +21,27 @@ export const authOptions: NextAuthOptions = {
           password: credentials?.password
         }
 
-        const user = await authService.loginByEmail(payload)
+        const res = (await authService.loginByEmail(payload)) as ILoginResponse
 
+        // Credentials Invalid Or Not Found
         if (
-          user?.status === HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.statusCode
+          res.status === HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.statusCode &&
+          Object.keys(res.errors).length > 0
         ) {
-          throw new Error('Email or password invalid')
+          throw new Error(JSON.stringify(res.errors))
         }
 
-        return user as any
+        // User Inactive
+        if (res.user.status.id === UserStatusEnum.INACTIVED) {
+          throw new Error(
+            JSON.stringify({
+              userStatus: res.user.status.id,
+              message: 'Email has not been actived'
+            })
+          )
+        }
+
+        return res as any
       }
     })
   ],

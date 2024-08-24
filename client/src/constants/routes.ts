@@ -1,7 +1,9 @@
 export const PUBLIC_ROUTES = {
   HOME: '/',
   LOGIN: '/login',
-  REGISTER: '/register'
+  REGISTER: '/register',
+  EMAIL_VERIFY: '/email-verify',
+  PERMISSION_DENIED: '/permission-denied'
 }
 
 const ADMIN_ROUTE = '/admin'
