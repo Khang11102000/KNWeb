@@ -1,7 +1,8 @@
 'use client'
 
 import { RULES } from '@/constants/messages'
-import { PRIVATE_ROUTES } from '@/constants/routes'
+import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
+import { UserStatusEnum } from '@/types/user-type'
 import type { FormProps } from 'antd'
 import { Button, Form, Input, notification } from 'antd'
 import { signIn } from 'next-auth/react'
@@ -15,7 +16,6 @@ type FieldType = {
 const LoginForm = () => {
   const router = useRouter()
 
-  // Events Handler
   // Handle Login
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
@@ -25,10 +25,8 @@ const LoginForm = () => {
         redirect: false
       })
 
-      console.log('🚀res---->', res)
-
-      if (!res?.ok) {
-        throw new Error(res?.error || 'Something went wrong')
+      if (res?.error) {
+        throw res.error
       } else {
         // Login Succeed -> Redirect To admin/dashboard
         notification.success({
@@ -36,21 +34,29 @@ const LoginForm = () => {
           description: 'Login is successfully',
           placement: 'bottomRight'
         })
+
         router.push(PRIVATE_ROUTES.ADMIN.DASHBOARD)
       }
     } catch (error: any) {
-      notification.error({
-        message: 'Error',
-        description: error?.message,
-        placement: 'bottomRight'
-      })
-    }
-  }
+      const errorData = JSON.parse(error)
 
-  const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
-    errorInfo
-  ) => {
-    console.log('Failed:', errorInfo)
+      if (errorData?.userStatus === UserStatusEnum.INACTIVED) {
+        notification.error({
+          message: 'Error',
+          description: errorData?.message,
+          placement: 'bottomRight'
+        })
+
+        // Redirect To Email Verify Page
+        router.push(PUBLIC_ROUTES.EMAIL_VERIFY)
+      } else {
+        notification.error({
+          message: 'Error',
+          description: 'Login Failed',
+          placement: 'bottomRight'
+        })
+      }
+    }
   }
 
   return (
@@ -58,7 +64,6 @@ const LoginForm = () => {
       layout='vertical'
       labelCol={{ span: 8 }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete='off'
       className='login-form'
     >

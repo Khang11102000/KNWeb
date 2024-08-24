@@ -16,6 +16,7 @@ import {
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 const { Header } = Layout
 
@@ -23,7 +24,13 @@ const AdminHeader = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
 
-  const handleLogout = async (e: any) => {
+  useEffect(() => {
+    if (!session) {
+      router.push(PUBLIC_ROUTES.LOGIN)
+    }
+  }, [session, router])
+
+  const handleLogout = async () => {
     try {
       if (status === 'authenticated') {
         const res = (await authService.logout(session?.token as string)) as {
@@ -40,7 +47,6 @@ const AdminHeader = () => {
           message: res.message || 'Success',
           description: 'Logout is successfully'
         })
-        router.push(PUBLIC_ROUTES.LOGIN)
       }
     } catch (error) {
       notification.error({
@@ -59,7 +65,7 @@ const AdminHeader = () => {
     {
       key: '2',
       danger: true,
-      label: <div onClick={handleLogout}>Logout</div>
+      label: <div onClick={() => handleLogout()}>Logout</div>
     }
   ]
 

@@ -27,23 +27,14 @@ const request = async <Response>(
     }
   })
 
-  console.log('🚀res from http---->', res)
-  console.log('🚀res from http---->', body)
-  // const data: Response = await res.json()
-  // return data
-
-  // // Data Response From Server
-  // if (res.status !== HTTP_STATUS_CODES.NO_CONTENT.statusCode) {
-  // }
-
-  if (res.status === 204) {
+  if (res.status === HTTP_STATUS_CODES.NO_CONTENT.statusCode) {
     return {
       statusCode: 204,
       message: 'Success'
     }
   }
 
-  return await res.json()
+  return (await res.json()) as Response
 }
 
 const http = {
