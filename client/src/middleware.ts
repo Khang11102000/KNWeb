@@ -1,32 +1,39 @@
 import envConfig from '@/config/environment'
 import { ADMIN_ROLE } from '@/constants/role'
-import { withAuth } from 'next-auth/middleware'
+import { NextRequestWithAuth, withAuth } from 'next-auth/middleware'
+import { NextResponse } from 'next/server'
 
-const PRIVATE_PATHS = [
+const ADMIN_PATHS = [
   '/admin/dashboard',
+  '/admin/users',
   '/admin/posts',
-  '/admin/profile',
-  '/admin/users'
+  '/admin/profile'
 ]
 
-export default withAuth(function middleware() {}, {
-  callbacks: {
-    authorized: ({ token, req }) => {
-      if (PRIVATE_PATHS.includes(req.nextUrl.pathname)) {
-        return token?.user.role.id === ADMIN_ROLE.code
-      }
-
-      return !!token
+export default withAuth(
+  function middleware(req: NextRequestWithAuth) {
+    if (
+      ADMIN_PATHS.some((path) => path === req.nextUrl.pathname) &&
+      req.nextauth.token?.user.role.id !== ADMIN_ROLE.code
+    ) {
+      return NextResponse.redirect(
+        new URL('/permission-denied', req.nextUrl.origin)
+      )
     }
   },
-  secret: envConfig.NEXT_PUBLIC_NEXTAUTH_SECRET
-})
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token
+    },
+    secret: envConfig.NEXT_PUBLIC_NEXTAUTH_SECRET
+  }
+)
 
 export const config = {
   matcher: [
     '/admin/dashboard',
+    '/admin/users',
     '/admin/posts',
-    '/admin/profile',
-    '/admin/users'
+    '/admin/profile'
   ]
 }
