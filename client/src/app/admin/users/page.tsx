@@ -33,7 +33,6 @@ const ManageUsersPage = async () => {
 
   const res = await userService.getUsers(accessToken as string)
   const users = (res as IGetUserResponse).data || []
-  console.log('🚀users---->', users)
 
   return (
     <>

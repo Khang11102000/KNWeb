@@ -8,6 +8,16 @@ const userService = {
         Authorization: `Bearer ${accessToken}`
       }
     })
+  },
+  addNewUser(accessToken: string, payload: IUser) {
+    return http.post<IUser>('/users', payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      next: {
+        tags: ['list-users']
+      }
+    })
   }
 }
 
