@@ -11,7 +11,8 @@ import {
   Flex,
   Layout,
   notification,
-  theme
+  theme,
+  Typography
 } from 'antd'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -19,16 +20,11 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 const { Header } = Layout
+const { Text } = Typography
 
 const AdminHeader = () => {
   const { data: session, status } = useSession()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (!session) {
-      router.push(PUBLIC_ROUTES.LOGIN)
-    }
-  }, [session, router])
+  const fullName = `${session?.user.lastName} ${session?.user.firstName}`
 
   const handleLogout = async () => {
     try {
@@ -80,16 +76,22 @@ const AdminHeader = () => {
           <Badge dot>
             <BellOutlined />
           </Badge>
-          <Dropdown
-            menu={{ items }}
-            arrow
-            trigger={['click']}
-            overlayStyle={{ width: '156px' }}
-          >
-            <a onClick={(e) => e.preventDefault()}>
-              <Avatar icon={<UserOutlined />} />
-            </a>
-          </Dropdown>
+          <Flex align='center' gap={6}>
+            <Text>Hello, {fullName || 'Admin'}</Text>
+            <Dropdown
+              menu={{ items }}
+              arrow
+              trigger={['click']}
+              overlayStyle={{ width: '156px' }}
+            >
+              <div
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => e.preventDefault()}
+              >
+                <Avatar icon={<UserOutlined />} />
+              </div>
+            </Dropdown>
+          </Flex>
         </Flex>
       </Flex>
     </Header>
