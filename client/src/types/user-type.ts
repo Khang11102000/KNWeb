@@ -1,8 +1,8 @@
 import { IBase } from '@/types/base-type'
 
 export enum UserStatusEnum {
-  INACTIVED = '1',
-  ACTIVED = '2'
+  ACTIVED = '1',
+  INACTIVED = '2'
 }
 
 export interface IUser extends IBase {

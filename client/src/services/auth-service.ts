@@ -1,4 +1,9 @@
-import { ILoginPayload, ILoginResponse } from '@/types/auth-type'
+import {
+  IEmailConfirmPayload,
+  ILoginPayload,
+  ILoginResponse,
+  IRegisterPayload
+} from '@/types/auth-type'
 import http from '@/utils/http'
 
 const authService = {
@@ -15,6 +20,12 @@ const authService = {
         }
       }
     )
+  },
+  register(payload: IRegisterPayload) {
+    return http.post<any>('/auth/email/register', payload)
+  },
+  confirmEmail(payload: IEmailConfirmPayload) {
+    return http.post<any>('/auth/email/confirm', payload)
   }
 }
 

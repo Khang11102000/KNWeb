@@ -1,5 +1,3 @@
-import { message } from 'antd'
-
 export const RULES = {
   email: {
     required: {
@@ -17,6 +15,21 @@ export const RULES = {
     minLength: {
       length: 6,
       message: 'Password must have least 6 characters'
+    }
+  },
+  firstName: {
+    required: {
+      message: 'First Name is required'
+    }
+  },
+  lastName: {
+    required: {
+      message: 'Last Name is required'
+    }
+  },
+  hash: {
+    required: {
+      message: 'Code is required'
     }
   }
 }

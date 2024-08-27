@@ -1,4 +1,5 @@
 .login-page {
+  position: relative;
   padding: 46px 40px 26px;
   border: 1px solid rgb(219, 219, 219);
   border-radius: 10px;
@@ -11,8 +12,7 @@
 
   .login-form {
     min-width: 400px;
-    width: 100%;
-    max-width: 600px;
+    max-width: 700px;
     margin-top: 30px;
   }
 
