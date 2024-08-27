@@ -3,6 +3,7 @@ export const PUBLIC_ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   EMAIL_VERIFY: '/email-verify',
+  EMAIL_VERIFY_SUCCESS: '/email-verify/success',
   PERMISSION_DENIED: '/permission-denied'
 }
 

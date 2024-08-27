@@ -1,7 +1,7 @@
 import LoginForm from '@/app/(auth)/login/login-form'
 import { Flex } from 'antd'
 import Image from 'next/image'
-import './LoginPage.scss'
+import './login-page.scss'
 
 const LoginPage = () => {
   return (

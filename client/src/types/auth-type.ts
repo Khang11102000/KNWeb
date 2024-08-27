@@ -13,3 +13,14 @@ export interface ILoginResponse {
   tokenExpires: Date
   user: IUser
 }
+
+export interface IRegisterPayload {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+}
+
+export interface IEmailConfirmPayload {
+  hash: string
+}
