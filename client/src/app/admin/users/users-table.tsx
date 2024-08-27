@@ -1,9 +1,13 @@
 'use client'
 
-import React from 'react'
-import { Button, Space, Table, Tag } from 'antd'
+import React, { useState } from 'react'
+import { Button, Flex, Space, Table, Tag, Typography } from 'antd'
 import type { TableProps } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 import { IUser } from '@/types/user-type'
+import CreateUserForm from '@/app/admin/users/create-user-form'
+
+const { Title } = Typography
 
 const columns: TableProps<IUser>['columns'] = [
   {
@@ -59,7 +63,38 @@ interface UserTableProps {
 }
 
 const UsersTable = ({ users }: UserTableProps) => {
-  return <Table columns={columns} dataSource={users} rowKey='id' />
+  const [isOpenCreateUserForm, setIsOpenCreateUserForm] =
+    useState<boolean>(false)
+
+  const renderHeader = () => {
+    return (
+      <Flex align='center' justify='space-between'>
+        <Title>List Users</Title>
+        <Button
+          icon={<PlusOutlined />}
+          type='primary'
+          onClick={() => setIsOpenCreateUserForm(true)}
+        >
+          Add User
+        </Button>
+      </Flex>
+    )
+  }
+
+  return (
+    <>
+      <Table
+        title={renderHeader}
+        columns={columns}
+        dataSource={users}
+        rowKey='id'
+      />
+      <CreateUserForm
+        isOpen={isOpenCreateUserForm}
+        setIsOpen={setIsOpenCreateUserForm}
+      />
+    </>
+  )
 }
 
 export default UsersTable

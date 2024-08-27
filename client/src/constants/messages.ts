@@ -31,5 +31,10 @@ export const RULES = {
     required: {
       message: 'Code is required'
     }
+  },
+  role: {
+    required: {
+      message: 'Role is required'
+    }
   }
 }

@@ -6,10 +6,11 @@ export enum UserStatusEnum {
 }
 
 export interface IUser extends IBase {
-  id: string
+  id?: string
   email: string
-  provider: string
-  socialId: null
+  provider?: string
+  photo?: string | null
+  socialId?: null
   firstName: string
   lastName: string
   role: {
@@ -23,4 +24,13 @@ export interface IUser extends IBase {
 export interface IGetUserResponse {
   data: IUser[]
   hasNextPage: boolean
+}
+
+export type AddNewUserTypes = Pick<
+  IUser,
+  'email' | 'firstName' | 'lastName' | 'photo'
+> & {
+  role: string
+  password: string
+  status: UserStatusEnum
 }
