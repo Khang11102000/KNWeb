@@ -19,3 +19,8 @@ export interface IUser extends IBase {
     id: UserStatusEnum
   }
 }
+
+export interface IGetUserResponse {
+  data: IUser[]
+  hasNextPage: boolean
+}

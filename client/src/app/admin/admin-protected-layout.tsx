@@ -1,5 +1,5 @@
 'use client'
-import { Layout } from 'antd'
+import { Breadcrumb, Layout } from 'antd'
 import { ReactNode } from 'react'
 import { AdminFooter, AdminHeader, AdminSidebar } from '@/components/layouts'
 
@@ -14,10 +14,10 @@ const AdminProtectedLayout = ({ children }: { children: ReactNode }) => {
         <Content style={{ margin: '24px 16px 0' }}>
           <div
             style={{
-              padding: 24,
-              minHeight: 360,
-              background: '#ccc',
-              borderRadius: '#ccc'
+              padding: 24
+              // minHeight: 360,
+              // background: '#ccc',
+              // borderRadius: '#ccc'
             }}
           >
             {children}
