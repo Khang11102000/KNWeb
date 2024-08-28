@@ -1,12 +1,8 @@
 import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
-import { ToastContainer } from 'react-toastify'
-import './globals.scss'
-import 'react-toastify/dist/ReactToastify.css'
-import AppProvider from '@/context/app-provider'
-import { cookies } from 'next/headers'
-import AuthProvider from '@/context/auth-provider'
-import RefreshToken from '@/components/refresh-token'
+import { AntdRegistry } from '@ant-design/nextjs-registry'
+import '@/styles/globals.scss'
+import NextAuthProvider from '@/context/nextauth-provider'
 
 const roboto = Roboto({
   subsets: ['vietnamese', 'latin'],
@@ -15,8 +11,8 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: 'Movie Ticket Booking',
-  description: 'Movie Ticket Booking built by Quốc Nam'
+  title: 'KNWeb',
+  description: 'KNWeb Client built by QuocNam'
 }
 
 export default function RootLayout({
@@ -24,17 +20,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const cookieStore = cookies()
-  const token = cookieStore.get('token')?.value
-
   return (
     <html lang='en'>
       <body className={roboto.className} suppressHydrationWarning>
-        <ToastContainer position='bottom-right' theme='colored' />
-        <AppProvider initialToken={token}>
-          <AuthProvider>{children}</AuthProvider>
-        </AppProvider>
-        <RefreshToken />
+        <NextAuthProvider>
+          <AntdRegistry>{children}</AntdRegistry>
+        </NextAuthProvider>
       </body>
     </html>
   )

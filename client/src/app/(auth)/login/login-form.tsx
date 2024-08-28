@@ -1,86 +1,117 @@
 'use client'
-
-import Button from '@/components/button'
-import Input from '@/components/input'
-import { message, regex, regexMessage } from '@/constants/validate'
-import authService from '@/services/auth-service'
-import { LoginBodyType } from '@/types/auth'
-import { clientToken } from '@/utils/http'
+import { RULES } from '@/constants/messages'
+import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
+import { ILoginPayload } from '@/types/auth-type'
+import { UserStatusEnum } from '@/types/user-type'
+import type { FormProps } from 'antd'
+import { Button, Flex, Form, Input, notification, Spin } from 'antd'
+import { signIn } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
+import { useState } from 'react'
 
 const LoginForm = () => {
   const router = useRouter()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<LoginBodyType>()
+  const [loading, setLoading] = useState(false)
 
   // Handle Login
-  const onSubmit = async (data: LoginBodyType) => {
+  const onFinish: FormProps<ILoginPayload>['onFinish'] = async (values) => {
+    setLoading(true)
     try {
-      const payload = { ...data }
+      const res = await signIn('credentials', {
+        email: values.email,
+        password: values.password,
+        redirect: false
+      })
 
-      // Call API Login
-      const res = await authService.login(payload)
+      if (res?.error) {
+        throw res.error
+      } else {
+        // Login Succeed -> Redirect To admin/dashboard
+        notification.success({
+          message: 'Successfully',
+          description: 'Login is successfully',
+          placement: 'bottomRight'
+        })
 
-      // Save token to client
-      const token = res?.data || {}
-      clientToken.value = JSON.stringify(token)
-
-      // Set access token on Next Server
-      await authService.authFromNextServer(token)
-
-      // Get profile
-      // handleGetProfile()
-
-      // Notification
-      toast.success(res.message || 'Login is successfully.')
-
-      router.push('/')
+        router.push(PRIVATE_ROUTES.ADMIN.DASHBOARD)
+      }
     } catch (error: any) {
-      const errorMessage = error?.data?.message
-      toast.error(errorMessage || 'Login failed. Please try again.')
+      const errorData = JSON.parse(error)
+
+      if (errorData?.userStatus === UserStatusEnum.INACTIVED) {
+        notification.error({
+          message: 'Error',
+          description: errorData?.message,
+          placement: 'bottomRight'
+        })
+
+        // Redirect To Email Verify Page
+        router.push(PUBLIC_ROUTES.EMAIL_VERIFY)
+      } else {
+        notification.error({
+          message: 'Error',
+          description: 'Login Failed',
+          placement: 'bottomRight'
+        })
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <form className='min-w-[263px] mt-16' onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        label='Email'
-        id='email'
-        placeholder='Enter your email...'
-        {...register('email', {
-          required: message.EMAIL,
-          pattern: {
-            value: regex.EMAIL,
-            message: regexMessage.EMAIL
-          }
-        })}
-        error={errors.email?.message}
-      />
+    <Spin spinning={loading}>
+      <Form
+        layout='vertical'
+        onFinish={onFinish}
+        autoComplete='off'
+        className='login-form'
+      >
+        <Form.Item
+          label='Email'
+          name='email'
+          rules={[
+            { required: true, message: RULES.email.required.message },
+            {
+              pattern: RULES.email.regex.pattern,
+              message: RULES.email.regex.message
+            }
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-      <Input
-        label='Password'
-        type='password'
-        id='password'
-        placeholder='Enter your password...'
-        containerStyle='mt-4'
-        {...register('password', {
-          required: message.PASSWORD,
-          minLength: {
-            value: 6,
-            message: message.MIN_LENGTH_PASSWORD
-          }
-        })}
-        error={errors.password?.message}
-      />
-      <Button className='mt-6 w-full' type='submit'>
-        Login
-      </Button>
-    </form>
+        <Form.Item
+          label='Password'
+          name='password'
+          rules={[
+            { required: true, message: RULES.password.required.message },
+            {
+              min: RULES.password.minLength.length,
+              message: RULES.password.minLength.message
+            }
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item>
+          <Button
+            type='primary'
+            htmlType='submit'
+            style={{ width: '100%', marginTop: 20 }}
+          >
+            Login
+          </Button>
+        </Form.Item>
+
+        <Flex justify='center' align='center' gap={4}>
+          <span>Do not have an account?</span>
+          <Link href={PUBLIC_ROUTES.REGISTER}>Register</Link>
+        </Flex>
+      </Form>
+    </Spin>
   )
 }
 

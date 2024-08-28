@@ -1,51 +1,37 @@
-import { groupRoles } from '@/constants/roles'
-import { PayloadJWTTypes, TokenTypes } from '@/types/auth'
-import { decode } from '@/utils/jwt'
+import envConfig from '@/config/environment'
+import { ADMIN_ROLE } from '@/constants/role'
+import { NextRequestWithAuth, withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 
-const userPrivatePaths = ['/me']
-const publicPaths = ['/login', '/register']
-const adminPaths = ['/admin/dashboard', '/admin/users', '/admin/users/add']
+const ADMIN_PATHS = [
+  '/admin/dashboard',
+  '/admin/users',
+  '/admin/posts',
+  '/admin/profile'
+]
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const token = request.cookies.get('token')?.value
-
-  if (
-    !token &&
-    (userPrivatePaths.includes(pathname) || adminPaths.includes(pathname))
-  ) {
-    return NextResponse.redirect(new URL('/login', request.url))
+export default withAuth(
+  function middleware(request: NextRequestWithAuth) {
+    if (
+      ADMIN_PATHS.some((path) => path === request.nextUrl.pathname) &&
+      request.nextauth.token?.user.role.id !== ADMIN_ROLE.code
+    ) {
+      return NextResponse.redirect(new URL('/permission-denied', request.url))
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token
+    },
+    secret: envConfig.NEXT_PUBLIC_NEXTAUTH_SECRET
   }
+)
 
-  if (token && publicPaths.includes(pathname)) {
-    return NextResponse.redirect(new URL('/', request.url))
-  }
-
-  // Get role from token
-  const tokenObj: TokenTypes = token && JSON.parse(token)
-  const payloadJWT = decode<PayloadJWTTypes>(tokenObj?.accessToken)
-  const role = payloadJWT?.group?.name
-  const isCustomer = role === groupRoles.CUSTOMER
-
-  // Check role
-  if (isCustomer && adminPaths.some((path) => path === pathname)) {
-    return NextResponse.redirect(new URL('/permission-denied', request.url))
-  }
-
-  return NextResponse.next()
-}
-
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: [
-    '/me',
-    '/login',
-    '/register',
     '/admin/dashboard',
     '/admin/users',
-    '/admin/users/add'
+    '/admin/posts',
+    '/admin/profile'
   ]
 }

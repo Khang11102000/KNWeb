@@ -1,83 +1,149 @@
 'use client'
 
-import Button from '@/components/button'
-import Input from '@/components/input'
-import envConfig from '@/config/environment'
-import { message, regex, regexMessage } from '@/constants/validate'
+import { RULES } from '@/constants/messages'
+import { PUBLIC_ROUTES } from '@/constants/routes'
 import authService from '@/services/auth-service'
-import { RegisterBodyType } from '@/types/auth'
-import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
+import { IRegisterPayload } from '@/types/auth-type'
+import { Button, Checkbox, Flex, Form, Input } from 'antd'
+import Link from 'next/link'
 
 const RegisterForm = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<RegisterBodyType>()
+  const [form] = Form.useForm()
 
-  // Handle Register
-  const onSubmit = async (data: RegisterBodyType) => {
-    const payload = { ...data }
-
+  // Handle Login
+  const onFinish = async (values: IRegisterPayload) => {
+    // Call api register
     try {
+      const payload = {
+        email: values.email,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName
+      }
+
       const res = await authService.register(payload)
-      toast.success(res.message || 'Register is successfully. Please login.')
-    } catch (error: any) {
-      toast.error(error?.data?.message)
+      console.log('🚀res---->', res)
+    } catch (error) {
+      console.log('🚀error---->', error)
     }
   }
 
   return (
-    <form className='mt-16' onSubmit={handleSubmit(onSubmit)}>
-      <Input
+    <Form
+      layout='vertical'
+      onFinish={onFinish}
+      autoComplete='off'
+      className='register-form'
+      form={form}
+    >
+      <Form.Item
         label='Email'
-        id='email'
-        placeholder='Enter your email...'
-        {...register('email', {
-          required: message.EMAIL,
-          pattern: {
-            value: regex.EMAIL,
-            message: regexMessage.EMAIL
+        name='email'
+        hasFeedback
+        rules={[
+          { required: true, message: RULES.email.required.message },
+          {
+            pattern: RULES.email.regex.pattern,
+            message: RULES.email.regex.message
           }
-        })}
-        error={errors.email?.message}
-      />
+        ]}
+      >
+        <Input />
+      </Form.Item>
 
-      <Input
-        containerStyle='mt-4'
-        label='Username'
-        id='username'
-        placeholder='Enter your username...'
-        {...register('username', {
-          required: message.USERNAME,
-          minLength: {
-            value: 6,
-            message: message.MIN_LENGTH_USERNAME
+      <Form.Item
+        label='First Name'
+        name='firstName'
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: RULES.firstName.required.message
           }
-        })}
-        error={errors.username?.message}
-      />
+        ]}
+      >
+        <Input />
+      </Form.Item>
 
-      <Input
-        containerStyle='mt-4'
+      <Form.Item
+        label='Last Name'
+        name='lastName'
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: RULES.lastName.required.message
+          }
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
         label='Password'
-        type='password'
-        id='password'
-        {...register('password', {
-          required: message.PASSWORD,
-          minLength: {
-            value: 6,
-            message: message.MIN_LENGTH_PASSWORD
+        name='password'
+        hasFeedback
+        rules={[
+          { required: true, message: RULES.password.required.message },
+          {
+            min: RULES.password.minLength.length,
+            message: RULES.password.minLength.message
           }
-        })}
-        placeholder='Enter your password...'
-        error={errors.password?.message}
-      />
-      <Button className='mt-6 w-full' type='submit'>
-        Register
-      </Button>
-    </form>
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        label='Confirm Password'
+        name='confirmPassword'
+        dependencies={['password']}
+        hasFeedback
+        rules={[
+          { required: true, message: RULES.password.required.message },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve()
+              }
+              return Promise.reject(
+                new Error('The new password that you entered do not match!')
+              )
+            }
+          })
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name='agreement'
+        valuePropName='checked'
+        rules={[
+          {
+            validator: (_, value) =>
+              value
+                ? Promise.resolve()
+                : Promise.reject(new Error('Should accept agreement'))
+          }
+        ]}
+      >
+        <Checkbox>
+          I have read the <a href=''>agreement</a>
+        </Checkbox>
+      </Form.Item>
+
+      <Form.Item>
+        <Button type='primary' htmlType='submit' style={{ width: '100%' }}>
+          Register
+        </Button>
+      </Form.Item>
+
+      <Flex justify='center' align='center' gap={4}>
+        <span>Already have an account?</span>
+        <Link href={PUBLIC_ROUTES.LOGIN}>Login</Link>
+      </Flex>
+    </Form>
   )
 }
 

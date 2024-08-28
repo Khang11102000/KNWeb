@@ -1,45 +1,45 @@
-import ButtonAddUser from '@/app/admin/users/button-add'
-import UserTable from '@/app/admin/users/user-table'
-import Pagination from '@/components/pagination'
-import { LIMIT_USERS } from '@/constants/pagination'
-import accountService from '@/services/account-service'
-import { UserTypes } from '@/types/user'
-import { cookies } from 'next/headers'
+import UsersTable from '@/app/admin/users/users-table'
+import CustomBreadCrumb from '@/components/shared/custom-breadcrumb/custom-breadcrum'
+import { authOptions } from '@/config/auth-options'
+import { PRIVATE_ROUTES } from '@/constants/routes'
+import userService from '@/services/admin/user-service'
+import { IGetUserResponse } from '@/types/user-type'
+import { HomeOutlined, UserOutlined } from '@ant-design/icons'
+import { getServerSession } from 'next-auth'
+import Link from 'next/link'
 
-type Props = {
-  searchParams: { [key: string]: string | string[] | undefined }
-}
+const items = [
+  {
+    title: (
+      <>
+        <HomeOutlined />
+        <Link href={PRIVATE_ROUTES.ADMIN.DASHBOARD}>Dashboard</Link>
+      </>
+    )
+  },
+  {
+    title: (
+      <>
+        <UserOutlined />
+        <span>Users</span>
+      </>
+    )
+  }
+]
 
-const ManageUserPage = async ({ searchParams }: Props) => {
-  const cookieStore = cookies()
-  const token = cookieStore.get('token')
-  const accessToken = token?.value && JSON.parse(token.value).accessToken
+const ManageUsersPage = async () => {
+  const session = await getServerSession(authOptions)
+  const accessToken = session?.token
 
-  const currentPage = Number(searchParams.page) || 1
-  const limit = Number(searchParams.limit) || LIMIT_USERS
-  const res: any = await accountService.getUsers(
-    accessToken,
-    `?page=${currentPage}&limit=${limit}`
-  )
-
-  const users = res?.data.users as UserTypes
-  const total = res?.data?.count
+  const res = await userService.getUsers(accessToken as string)
+  const users = (res as IGetUserResponse).data || []
 
   return (
     <>
-      <div className='flex items-center justify-between pt-10'>
-        <h2>Users</h2>
-        <ButtonAddUser />
-      </div>
-      <UserTable users={users} />
-      <Pagination
-        containerStyles='justify-end mt-5'
-        total={total}
-        page={currentPage}
-        limit={limit}
-      />
+      <CustomBreadCrumb items={items} />
+      <UsersTable users={users} />
     </>
   )
 }
 
-export default ManageUserPage
+export default ManageUsersPage

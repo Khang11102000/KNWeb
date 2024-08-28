@@ -1,32 +1,31 @@
 import {
-  LoginBodyType,
-  LoginResType,
-  RefreshTokenResTypes,
-  RegisterBodyType,
-  RegisterResType,
-  TokenTypes
-} from '@/types/auth'
+  IEmailConfirmPayload,
+  ILoginPayload,
+  ILoginResponse,
+  IRegisterPayload
+} from '@/types/auth-type'
 import http from '@/utils/http'
 
 const authService = {
-  login(payload: LoginBodyType) {
-    return http.post<LoginResType>('/auth/login', payload)
+  loginByEmail(payload: ILoginPayload) {
+    return http.post<ILoginResponse>('/auth/email/login', payload)
   },
-  register(payload: RegisterBodyType) {
-    return http.post<RegisterResType>('/auth/register', payload)
+  logout(accessToken: string) {
+    return http.post(
+      '/auth/logout',
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    )
   },
-  authFromNextServer(payload: TokenTypes) {
-    return http.post('/api/auth', payload, {
-      baseUrl: ''
-    })
+  register(payload: IRegisterPayload) {
+    return http.post<any>('/auth/email/register', payload)
   },
-  logoutFromNextClientToNextServer() {
-    return http.get('/api/auth/logout', {
-      baseUrl: ''
-    })
-  },
-  refreshToken(payload: { refreshToken: string }) {
-    return http.post<RefreshTokenResTypes>('/auth/refresh-token', payload)
+  confirmEmail(payload: IEmailConfirmPayload) {
+    return http.post<any>('/auth/email/confirm', payload)
   }
 }
 

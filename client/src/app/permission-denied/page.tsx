@@ -1,5 +1,7 @@
+import React from 'react'
+
 const PermissionDeniedPage = () => {
-  return <div>You cannot access this page.</div>
+  return <div>PermissionDeniedPage</div>
 }
 
 export default PermissionDeniedPage
