@@ -24,6 +24,7 @@ const { Text } = Typography
 
 const AdminHeader = () => {
   const { data: session, status } = useSession()
+  const router = useRouter()
   const fullName = `${session?.user.lastName} ${session?.user.firstName}`
 
   const handleLogout = async () => {
@@ -42,6 +43,7 @@ const AdminHeader = () => {
             message: res.message || 'Success',
             description: 'Logout is successfully'
           })
+          router.push(PUBLIC_ROUTES.HOME)
         }
       }
     } catch (error) {
