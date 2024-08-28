@@ -55,6 +55,13 @@ const http = {
   ) {
     return request<Response>('PUT', url, { ...options, body })
   },
+  patch<Response>(
+    url: string,
+    body: any,
+    options?: Omit<RequestCustomOptions, 'body'>
+  ) {
+    return request<Response>('PATCH', url, { ...options, body })
+  },
   delete<Response>(
     url: string,
     body: any,

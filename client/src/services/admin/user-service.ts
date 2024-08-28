@@ -18,6 +18,26 @@ const userService = {
         tags: ['list-users']
       }
     })
+  },
+  editUser(accessToken: string, userId: string, payload: IUser) {
+    return http.patch<IUser>(`/users/${userId}`, payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      next: {
+        tags: ['list-users']
+      }
+    })
+  },
+  deleteUser(accessToken: string, userId: string) {
+    return http.delete(`/users/${userId}`, null, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      next: {
+        tags: ['list-users']
+      }
+    })
   }
 }
 

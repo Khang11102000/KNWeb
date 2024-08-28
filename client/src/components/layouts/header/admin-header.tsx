@@ -28,7 +28,7 @@ const AdminHeader = () => {
 
   const handleLogout = async () => {
     try {
-      if (status === 'authenticated') {
+      if (session) {
         const res = (await authService.logout(session?.token as string)) as {
           message: string
           statusCode: number
@@ -36,13 +36,13 @@ const AdminHeader = () => {
 
         if (res.statusCode === HTTP_STATUS_CODES.UNAUTHORIZED.statusCode) {
           throw new Error(res.message)
+        } else {
+          signOut({ redirect: false })
+          notification.success({
+            message: res.message || 'Success',
+            description: 'Logout is successfully'
+          })
         }
-
-        signOut({ redirect: false })
-        notification.success({
-          message: res.message || 'Success',
-          description: 'Logout is successfully'
-        })
       }
     } catch (error) {
       notification.error({

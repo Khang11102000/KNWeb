@@ -26,3 +26,23 @@ export async function addNewUserAction(data: IUser) {
     return { status: res?.status, errors: res?.errors } as EntityError
   }
 }
+
+export const editUserAction = async (userId: string, data: IUser) => {
+  const session = await getServerSession(authOptions)
+
+  if (session) {
+    const res = await userService.editUser(session.token, userId, data)
+    revalidateTag('list-users')
+    return res
+  }
+}
+
+export const deleteUserAction = async (userId: string) => {
+  const session = await getServerSession(authOptions)
+
+  if (session) {
+    const res = await userService.deleteUser(session.token, userId)
+    revalidateTag('list-users')
+    return res
+  }
+}
