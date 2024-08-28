@@ -90,7 +90,7 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     MailModule,
     MailerModule,
     HomeModule,
-    PostsModule,
+    // PostsModule,
   ],
 })
 export class AppModule {}
