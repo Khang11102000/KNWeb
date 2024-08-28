@@ -11,14 +11,12 @@ const ADMIN_PATHS = [
 ]
 
 export default withAuth(
-  function middleware(req: NextRequestWithAuth) {
+  function middleware(request: NextRequestWithAuth) {
     if (
-      ADMIN_PATHS.some((path) => path === req.nextUrl.pathname) &&
-      req.nextauth.token?.user.role.id !== ADMIN_ROLE.code
+      ADMIN_PATHS.some((path) => path === request.nextUrl.pathname) &&
+      request.nextauth.token?.user.role.id !== ADMIN_ROLE.code
     ) {
-      return NextResponse.redirect(
-        new URL('/permission-denied', req.nextUrl.origin)
-      )
+      return NextResponse.redirect(new URL('/permission-denied', request.url))
     }
   },
   {

@@ -15,9 +15,6 @@ const AdminProtectedLayout = ({ children }: { children: ReactNode }) => {
           <div
             style={{
               padding: 24
-              // minHeight: 360,
-              // background: '#ccc',
-              // borderRadius: '#ccc'
             }}
           >
             {children}

@@ -48,6 +48,7 @@ export const authOptions: NextAuthOptions = {
   secret: envConfig.NEXT_PUBLIC_NEXTAUTH_SECRET,
   pages: {
     signIn: PUBLIC_ROUTES.LOGIN
+    // error: PUBLIC_ROUTES.LOGIN
   },
   callbacks: {
     async jwt({ token, user }) {
