@@ -1,0 +1,33 @@
+:root {
+  /*---------------------- COLORS ------------------------------*/
+  --primary-color: #2f65b9;
+  --primary-hover-color: #eef8ff;
+  --primary-text-hover-color: #4091cc;
+  --light-page-color: #f8f9fa;
+  --dark-page-color: #091025;
+  --white-color: #ffffff;
+  --black-color: #07142e;
+  --light-gray-color: #6f7f92;
+  --dark-gray-color: #a5a8ab;
+  --red-color: #f14646;
+  --blue-color: #3897f0;
+  --heading-color: #2d2b42;
+  --text-link-color: #7e8b9a;
+
+  /*---------------------- PAGE SETTINGS -----------------------*/
+  --max-w-page: 2560px;
+  --max-w-container-fluid: 1920px;
+  --h-header: 70px;
+  --w-sidebar: 270px;
+  --gap: 15px;
+
+  /*--------------------- TYPOGRAPHYS --------------------------*/
+  --fs-body: 1.6rem;
+  --fs-body-small: 1.4rem;
+
+  /*--------------------- ACCOUNT SETTINGS ---------------------*/
+  --w-account-dropdown: 264px;
+
+  /*--------------------- TRANSITIONS & ANIMATIONS -------------*/
+  --duration-time: 0.3s;
+}

@@ -1,14 +1,4 @@
-@use './core/reset';
-@use './core/variables';
-
-.hidden {
-  display: none;
-}
-
-html {
-  font-size: 62.5%;
-}
-
-body {
-  overflow-x: hidden;
-}
+@import './reset';
+@import './variables';
+@import './utilities';
+@import './layouts';

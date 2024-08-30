@@ -1,0 +1,5 @@
+.footer {
+  width: calc(100% - var(--w-sidebar));
+  background-color: var(--red-color);
+  margin-left: auto;
+}
