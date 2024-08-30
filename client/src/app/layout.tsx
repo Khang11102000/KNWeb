@@ -1,12 +1,14 @@
-import type { Metadata } from 'next'
-import { Roboto } from 'next/font/google'
-import { AntdRegistry } from '@ant-design/nextjs-registry'
-import '@/styles/globals.scss'
 import NextAuthProvider from '@/context/nextauth-provider'
+import '@/styles/globals.scss'
+import theme from '@/utils/theme'
+import { AntdRegistry } from '@ant-design/nextjs-registry'
+import { ConfigProvider } from 'antd'
+import type { Metadata } from 'next'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 
-const roboto = Roboto({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['vietnamese', 'latin'],
-  weight: ['400', '500', '700', '900'],
+  weight: ['400', '500', '700', '800'],
   display: 'fallback'
 })
 
@@ -22,10 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={roboto.className} suppressHydrationWarning>
-        <NextAuthProvider>
-          <AntdRegistry>{children}</AntdRegistry>
-        </NextAuthProvider>
+      <body className={plusJakartaSans.className} suppressHydrationWarning>
+        <ConfigProvider theme={theme}>
+          <NextAuthProvider>
+            <AntdRegistry>{children}</AntdRegistry>
+          </NextAuthProvider>
+        </ConfigProvider>
       </body>
     </html>
   )

@@ -1,0 +1,7 @@
+.userLayout {
+  display: flex;
+  align-items: flex-start;
+  width: calc(100% - var(--w-sidebar));
+  margin-left: auto;
+  
+}

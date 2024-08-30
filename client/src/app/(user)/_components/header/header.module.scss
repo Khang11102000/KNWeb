@@ -1,0 +1,23 @@
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  height: var(--h-header);
+  background-color: var(--white-color);
+  width: calc(100% - var(--w-sidebar));
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 14px;
+  }
+
+  .logoContainer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+}

@@ -1,0 +1,31 @@
+@import '../../../../styles/mixins';
+
+.accountWrapper {
+  position: relative;
+}
+
+.dropDownWrapper {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 13px);
+  width: var(--w-account-dropdown);
+  background-color: var(--white-color);
+
+  .menuItem {
+    @include transition(var(--duration-time));
+
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 16px 20px;
+    font-size: var(--fs-body-small);
+    color: var(--text-link-color);
+    font-weight: 500;
+    text-transform: capitalize;
+
+    &:hover {
+      background-color: var(--primary-hover-color);
+      color: var(--primary-text-hover-color);
+    }
+  }
+}
