@@ -1,0 +1,65 @@
+@import '../../../../../styles/mixins';
+
+.wrapper {
+  .tabList {
+    width: 100%;
+    display: flex;
+    height: 68px;
+    background-color: var(--white-color);
+    border-radius: var(--border-radius-small);
+    overflow: hidden;
+
+    // Responsive tablist
+    @include xxs {
+      flex-direction: column;
+      height: auto;
+    }
+
+    li {
+      @include mid(true);
+      @include transition(var(--duration-time));
+      flex: 1;
+      flex-shrink: 0;
+      padding: 0 15px;
+      text-transform: capitalize;
+      text-align: center;
+      cursor: pointer;
+      color: var(--text-link-color);
+
+      // Resposive TabItem
+      @include xxs {
+        padding: 20px 15px;
+      }
+
+      // Tab Active
+      &.tabActive {
+        color: var(--white-color);
+        background-color: var(--primary-color);
+      }
+
+      // Tab Hover
+      &:not(.tabActive):hover {
+        background-color: var(--primary-hover-color);
+        color: var(--primary-text-hover-color);
+      }
+    }
+  }
+
+  .tabContent {
+    padding: 26px;
+    margin-top: 18px;
+    background-color: var(--white-color);
+
+    .title {
+      color: var(--heading-color);
+      font-size: 1.8rem;
+      font-weight: 500;
+      text-transform: capitalize;
+      line-height: 2.63rem;
+    }
+
+    .informationForm {
+      padding-top: 26px;
+    }
+  }
+}

@@ -11,7 +11,7 @@
   --dark-gray-color: #a5a8ab;
   --red-color: #f14646;
   --blue-color: #3897f0;
-  --heading-color: #2d2b42;
+  --heading-color: #2b2d42;
   --text-link-color: #7e8b9a;
 
   /*---------------------- PAGE SETTINGS -----------------------*/
@@ -25,9 +25,14 @@
   --fs-body: 1.6rem;
   --fs-body-small: 1.4rem;
 
+  --lh-body: 2.9rem;
+
   /*--------------------- ACCOUNT SETTINGS ---------------------*/
   --w-account-dropdown: 264px;
 
   /*--------------------- TRANSITIONS & ANIMATIONS -------------*/
   --duration-time: 0.3s;
+
+  /*--------------------- BORDERS ------------------------------*/
+  --border-radius-small: 4px;
 }

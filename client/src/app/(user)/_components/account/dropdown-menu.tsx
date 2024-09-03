@@ -1,7 +1,6 @@
 import { Typography } from 'antd'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { ProfileOutlined } from '@ant-design/icons'
 import styles from './account.module.scss'
 import { forwardRef } from 'react'
 import {
@@ -59,9 +58,11 @@ const DropdownMenu = forwardRef<HTMLDivElement, IDropdownMenuProps>(
         {/* Menu Item */}
         <ul>
           {ACCOUNT_MENUS.map(({ icon, path, title }, index) => (
-            <Link href={path} key={index} className={clsx(menuItem)}>
-              {icon} <span>{title}</span>
-            </Link>
+            <li key={index}>
+              <Link href={path} className={clsx(menuItem)}>
+                {icon} <span>{title}</span>
+              </Link>
+            </li>
           ))}
         </ul>
       </div>

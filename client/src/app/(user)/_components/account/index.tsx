@@ -9,7 +9,6 @@ const { accountWrapper } = accountStyles
 
 const Account = () => {
   const [openDropdownMenu, setOpenDropdownMenu] = useState<boolean>(false)
-  console.log('🚀openDropdownMenu---->', openDropdownMenu)
   const accountDropdownRef = useRef<HTMLDivElement>(null)
 
   const handleToggleDropdownMenu = (
@@ -30,7 +29,9 @@ const Account = () => {
       }
     }
 
-    window.addEventListener('click', handleEventClick)
+    if (typeof window !== undefined) {
+      window.addEventListener('click', handleEventClick)
+    }
 
     return () => window.removeEventListener('click', handleEventClick)
   }, [])
