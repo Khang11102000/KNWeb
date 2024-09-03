@@ -10,6 +10,7 @@ interface ICustomSearchProps {
   size?: SizeType
   allowClear?: boolean
   variant?: 'filled' | 'outlined' | 'borderless'
+  classNames?: string
   [key: string]: any
 }
 
@@ -21,6 +22,7 @@ const CustomSearch = ({
   // size = 'middle',
   allowClear = true,
   variant = 'filled',
+  classNames = '',
   ...props
 }: ICustomSearchProps) => {
   const [value, setValue] = useState('')
@@ -50,6 +52,7 @@ const CustomSearch = ({
       className={customSearch}
       allowClear={allowClear}
       variant={variant}
+      rootClassName={classNames}
       {...props}
     />
   )

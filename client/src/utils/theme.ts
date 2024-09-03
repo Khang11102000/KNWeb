@@ -8,6 +8,13 @@ const theme: ThemeConfig = {
   components: {
     Typography: {
       titleMarginBottom: 0
+    },
+    Form: {
+      labelColor: '#7e8b9a',
+      labelFontSize: 12
+    },
+    Input: {
+      borderRadiusLG: 4
     }
   }
 }

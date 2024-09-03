@@ -5,6 +5,7 @@ html {
 body {
   width: 100%;
   max-width: var(--max-w-page);
-  background-color: var(--page-color);
+  background-color: var(--light-page-color);
   font-size: var(--fs-body);
+  line-height: var(--lh-body);
 }

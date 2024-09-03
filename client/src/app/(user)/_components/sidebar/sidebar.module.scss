@@ -1,10 +1,16 @@
+@import '../../../../styles/mixins';
+
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 51;
-
   width: var(--w-sidebar);
   height: 100vh;
   border: 1px solid green;
+  @include transition(var(--duration-time));
+
+  @include sm {
+    @include transform(translateX(-100%));
+  }
 }

@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
+'use client'
+import { useEffect, useState } from 'react'
 
 const browser = typeof window !== 'undefined'
 
