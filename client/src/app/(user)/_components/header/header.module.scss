@@ -9,21 +9,17 @@
   background-color: var(--white-color);
   width: calc(100% - var(--w-sidebar));
 
-  @include sm {
-    width: 100%;
-  }
-
   .container {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     height: 100%;
     padding: 0 14px;
   }
 
   .logoContainer {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 14px;
 
@@ -44,6 +40,19 @@
     // Hidden on tablet
     @include sm {
       display: none;
+    }
+  }
+
+  // Responsive
+  @include sm {
+    width: 100%;
+
+    .container {
+      justify-content: space-between;
+    }
+
+    .logoContainer {
+      display: flex;
     }
   }
 }

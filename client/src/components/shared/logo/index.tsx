@@ -7,11 +7,15 @@ const { logoWrapper, name } = logoStyles
 
 interface ILogoProps {
   classNames?: string
+  containerClassNames?: string
 }
 
-const Logo = ({ classNames = '' }: ILogoProps) => {
+const Logo = ({ classNames = '', containerClassNames = '' }: ILogoProps) => {
   return (
-    <Link href={PUBLIC_ROUTES.HOME} className={logoWrapper}>
+    <Link
+      href={PUBLIC_ROUTES.HOME}
+      className={clsx(logoWrapper, containerClassNames)}
+    >
       <svg
         width='50'
         viewBox='0 0 24 24'
