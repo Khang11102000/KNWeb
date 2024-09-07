@@ -1,3 +1,4 @@
+import { FileType } from '../../files/domain/file';
 import { Status } from '../../statuses/domain/status';
 import { ApiProperty } from '@nestjs/swagger';
 import databaseConfig from '../../database/config/database.config';
@@ -10,16 +11,40 @@ const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
   : Number;
 // </database-block>
 
-export class Posts {
+export class Comment {
   @ApiProperty({
     type: idType,
   })
   id: number | string;
 
   @ApiProperty({
-    type: () => User ,
+    type: idType,
   })
-  poster: User;
+  postId?: number | string;
+
+  @ApiProperty({
+    type: idType,
+  })
+  commentId?: number | string;
+  // @ApiProperty({
+  //   type: String,
+  // })
+  // auid: string;
+
+  // @ApiProperty({
+  //   type: String,
+  // })
+  // postAuid: string;
+
+  // @ApiProperty({
+  //   type: String,
+  // })
+  // commentAuid: string;
+
+  @ApiProperty({
+    type: () => User,
+  })
+  commenter: User;
 
   @ApiProperty({
     type: String,
@@ -28,20 +53,10 @@ export class Posts {
   content: string | null;
 
   @ApiProperty({
-    type: String,
-  })
-  photo: string | null;
-
-  @ApiProperty({
-    type: Number,
-  })
-  status: number;
-
-  @ApiProperty({
-    type: Array,
+    type: Array
   })
   comments: string[];
-  
+
   @ApiProperty()
   createdAt: Date;
 

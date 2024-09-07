@@ -80,13 +80,13 @@ export class UserSchemaClass extends EntityDocumentHelper {
   lastName: string | null;
 
   @ApiProperty({
-    type: () => FileSchemaClass,
+    type: String,
+    example: 'https://ibb.co/KqXmZv2'
   })
   @Prop({
-    type: FileSchemaClass,
+    type: String,
   })
-  @Type(() => FileSchemaClass)
-  photo?: FileSchemaClass | null;
+  photo?: string | null;
 
   @ApiProperty({
     type: () => RoleSchema,

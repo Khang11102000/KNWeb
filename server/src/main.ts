@@ -13,6 +13,8 @@ import validationOptions from './utils/validation-options';
 import { AllConfigType } from './config/config.type';
 import { ResolvePromisesInterceptor } from './utils/serializer.interceptor';
 
+declare const module: any;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -47,5 +49,9 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(configService.getOrThrow('app.port', { infer: true }));
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 }
 bootstrap();

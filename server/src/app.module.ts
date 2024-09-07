@@ -23,6 +23,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongooseConfigService } from './database/mongoose-config.service';
 import { DatabaseConfig } from './database/config/database-config.type';
 import { PostsModule } from './posts/posts.module';
+import { CommentModule } from './comment/comment.module';
 
 // <database-block>
 const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
@@ -90,7 +91,8 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     MailModule,
     MailerModule,
     HomeModule,
-    // PostsModule,
+    PostsModule,
+    CommentModule
   ],
 })
 export class AppModule {}

@@ -1,12 +1,11 @@
-import { Posts } from '../../../../domain/post';
-import { PostSchemaClass } from '../entities/post.schema';
+import { Comment } from '../../../../domain/comment';
+import { CommentSchemaClass } from '../entities/comment.schema';
 
-export class PostMapper {
-  static toDomain(raw: PostSchemaClass): Posts {
-    const domainEntity = new Posts();
+export class CommentMapper {
+  static toDomain(raw: CommentSchemaClass): Comment {
+    const domainEntity = new Comment();
     domainEntity.id = raw._id.toString();
     domainEntity.content = raw.content;
-    domainEntity.photo = raw.photo;
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;
     domainEntity.deletedAt = raw.deletedAt;
@@ -14,15 +13,11 @@ export class PostMapper {
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: Posts): PostSchemaClass {
-
-
-    const persistenceSchema = new PostSchemaClass();
+  static toPersistence(domainEntity: Comment): CommentSchemaClass {
+    const persistenceSchema = new CommentSchemaClass();
     if (domainEntity.id && typeof domainEntity.id === 'string') {
       persistenceSchema._id = domainEntity.id;
     }
-    persistenceSchema.content = domainEntity.content;
-    persistenceSchema.photo = domainEntity.photo;
     persistenceSchema.createdAt = domainEntity.createdAt;
     persistenceSchema.updatedAt = domainEntity.updatedAt;
     persistenceSchema.deletedAt = domainEntity.deletedAt;

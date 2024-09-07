@@ -5,40 +5,21 @@ import {
   IsNotEmpty,
   IsOptional,
 } from 'class-validator';
-import { FileDto } from '../../files/dto/file.dto';
-import databaseConfig from 'src/database/config/database.config';
-import { DatabaseConfig } from 'src/database/config/database-config.type';
+import { UserDto } from 'src/users/dto/user.dto';
 
-// <database-block>
-const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
-  ? String
-  : Number;
-// </database-block>
 export class CreatePostDto {
   @IsNotEmpty()
-  @ApiProperty({
-    type: idType,
-  })
-  posterId: string | number;
+  @ApiPropertyOptional({ type: () => UserDto })
+  @Type(() => UserDto)
+  poster: UserDto;
 
-  // @ApiPropertyOptional({
-  //   type: ViewStatusDto,
-  // })
-  // @Type(() => ViewStatusDto)
-  // viewStatus?: ViewStatusDto | null;
-
-  @ApiProperty({ example: 'No Content', type: String })
-  @IsNotEmpty()
+  @ApiProperty({ example: `This is post's content`, type: String })
+  @IsOptional()
   content: string | null;
 
-  @ApiPropertyOptional({ type: () => FileDto })
+  @ApiPropertyOptional({ type: String })
   @IsOptional()
-  photo?: FileDto | null;
-
-  // @ApiPropertyOptional({ type: StatusDto })
-  // @IsOptional()
-  // @Type(() => StatusDto)
-  // status?: StatusDto;
-
-  // hash?: string | null;
+  photo: string | null;
+  status: number;
+  comments: string[];
 }

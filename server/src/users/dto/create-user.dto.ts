@@ -7,7 +7,6 @@ import {
   IsOptional,
   MinLength,
 } from 'class-validator';
-import { FileDto } from '../../files/dto/file.dto';
 import { RoleDto } from '../../roles/dto/role.dto';
 import { StatusDto } from '../../statuses/dto/status.dto';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
@@ -35,9 +34,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string | null;
 
-  @ApiPropertyOptional({ type: () => FileDto })
+  @ApiPropertyOptional({ example: 'https://ibb.co/KqXmZv2', type: String })
   @IsOptional()
-  photo?: FileDto | null;
+  photo?: string | null;
 
   @ApiPropertyOptional({ type: RoleDto })
   @IsOptional()

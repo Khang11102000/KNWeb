@@ -12,8 +12,8 @@ import {
   HttpCode,
   SerializeOptions,
 } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -31,21 +31,21 @@ import {
 } from '../utils/dto/infinity-pagination-response.dto';
 import { NullableType } from '../utils/types/nullable.type';
 // import { QueryPostDto } from './dto/query-post.dto';
-import { Posts } from './domain/post';
-import { PostsService } from './posts.service';
+import { Comment } from './domain/comment';
+import { CommentService } from './comment.service';
 import { RolesGuard } from '../roles/roles.guard';
 import { infinityPagination } from '../utils/infinity-pagination';
 
 @ApiBearerAuth()
-@Roles(RoleEnum.user)
+@Roles(RoleEnum.admin)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@ApiTags('Posts')
+@ApiTags('Comment')
 @Controller({
-  path: 'posts',
+  path: 'comment',
   version: '1',
 })
-export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+export class CommentController {
+  constructor(private readonly commentService: CommentService) {}
 
   @ApiCreatedResponse({
     type: Post,
@@ -55,39 +55,16 @@ export class PostsController {
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createProfileDto: CreatePostDto): Promise<Posts> {
-    return this.postsService.create(createProfileDto);
+  create(@Body() createProfileDto: CreateCommentDto): Promise<Comment> {
+    return this.commentService.create(createProfileDto);
   }
 
   @ApiOkResponse({
-    type: InfinityPaginationResponse(Posts),
+    type: InfinityPaginationResponse(Comment),
   })
   @SerializeOptions({
     groups: ['user'],
   })
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  // async findAll(
-  //   @Query() query: QueryPostDto,
-  // ): Promise<InfinityPaginationResponseDto<Post>> {
-  //   const page = query?.page ?? 1;
-  //   let limit = query?.limit ?? 10;
-  //   if (limit > 50) {
-  //     limit = 50;
-  //   }
-
-  //   return infinityPagination(
-  //     await this.postsService.findManyWithPagination({
-  //       filterOptions: query?.filters,
-  //       sortOptions: query?.sort,
-  //       paginationOptions: {
-  //         page,
-  //         limit,
-  //       },
-  //     }),
-  //     { page, limit },
-  //   );
-  // }
 
   @ApiOkResponse({
     type: Post,
@@ -102,8 +79,8 @@ export class PostsController {
     type: String,
     required: true,
   })
-  findOne(@Param('id') id: Posts['id']): Promise<NullableType<Posts>> {
-    return this.postsService.findById(id);
+  findOne(@Param('id') id: Comment['id']): Promise<NullableType<Comment>> {
+    return this.commentService.findById(id);
   }
 
   @ApiOkResponse({
@@ -119,12 +96,12 @@ export class PostsController {
     type: String,
     required: true,
   })
-  update(
-    @Param('id') id: Posts['id'],
-    @Body() updatePostDto: UpdatePostDto,
-  ): Promise<Posts | null> {
-    return this.postsService.update(id, updatePostDto);
-  }
+  // update(
+  //   @Param('id') id: Comment['id'],
+  //   @Body() updateCommentDto: UpdateCommentDto,
+  // ): Promise<Comment | null> {
+  //   return this.commentService.update(id, updateCommentDto);
+  // }
 
   @Delete(':id')
   @ApiParam({
@@ -133,7 +110,7 @@ export class PostsController {
     required: true,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: Posts['id']): Promise<void> {
-    return this.postsService.remove(id);
+  remove(@Param('id') id: Comment['id']): Promise<void> {
+    return this.commentService.remove(id);
   }
 }

@@ -13,6 +13,7 @@ import { RoleSchema } from '../../../../../roles/infrastructure/persistence/docu
 import { ApiProperty } from '@nestjs/swagger';
 import databaseConfig from 'src/database/config/database.config';
 import { DatabaseConfig } from 'src/database/config/database-config.type';
+import { UserSchema, UserSchemaClass } from 'src/users/infrastructure/persistence/document/entities/user.schema';
 
 export type PostSchemaDocument = HydratedDocument<PostSchemaClass>;
 
@@ -30,42 +31,28 @@ const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
 })
 export class PostSchemaClass extends EntityDocumentHelper {
   @ApiProperty({
-    type: idType,
-    example: 'john.doe@example.com',
+    type: () => UserSchemaClass,
   })
-  @Prop()
-  @Expose({ groups: ['me', 'admin'] })
-  posterId: number | string;
+  @Prop({
+    type: UserSchemaClass,
+  })
+  // @Expose({ groups: ['me', 'admin'] })
+  poster: UserSchemaClass;
 
-  //   @ApiProperty({
-  //   type: () => ViewStatus,
-  // })
-  // viewStatus: ViewStatus;
   @ApiProperty({
     type: String,
     example: 'No content',
   })
-  @Expose()
-  @Exclude()
-  @Prop()
-  content: string;
+  @Prop({
+    type: String,
+  })
+  content: string | null;
 
   @ApiProperty({
-    type: () => FileSchemaClass,
+    type: String,
   })
-  @Prop({
-    type: FileSchemaClass,
-  })
-  @Type(() => FileSchemaClass)
-  photo?: FileSchemaClass | null;
+  photo: string | null;
 
-  // @ApiProperty({
-  //   type: () => StatusSchema,
-  // })
-  // @Prop({
-  //   type: StatusSchema,
-  // })
-  // status?: StatusSchema;
 
   @ApiProperty()
   @Prop({ default: now })

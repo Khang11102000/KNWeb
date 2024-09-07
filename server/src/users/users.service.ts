@@ -20,7 +20,6 @@ import { DeepPartial } from '../utils/types/deep-partial.type';
 export class UsersService {
   constructor(
     private readonly usersRepository: UserRepository,
-    private readonly filesService: FilesService,
   ) {}
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
@@ -48,20 +47,6 @@ export class UsersService {
       }
     }
 
-    if (clonedPayload.photo?.id) {
-      const fileObject = await this.filesService.findById(
-        clonedPayload.photo.id,
-      );
-      if (!fileObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            photo: 'imageNotExists',
-          },
-        });
-      }
-      clonedPayload.photo = fileObject;
-    }
 
     if (clonedPayload.role?.id) {
       const roleObject = Object.values(RoleEnum)
@@ -158,21 +143,6 @@ export class UsersService {
           },
         });
       }
-    }
-
-    if (clonedPayload.photo?.id) {
-      const fileObject = await this.filesService.findById(
-        clonedPayload.photo.id,
-      );
-      if (!fileObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            photo: 'imageNotExists',
-          },
-        });
-      }
-      clonedPayload.photo = fileObject;
     }
 
     if (clonedPayload.role?.id) {
