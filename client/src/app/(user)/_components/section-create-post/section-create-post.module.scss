@@ -1,0 +1,74 @@
+@import '../../../../styles/mixins';
+
+.sectionCreatePost {
+  background-color: var(--white-color);
+  --pd: 20px;
+
+  .createPostContainer {
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  // Create Post Header
+  .header {
+    padding: var(--pd);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-link-color);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+
+    .title {
+      text-transform: capitalize;
+    }
+
+    .optionIconWrapper {
+      cursor: pointer;
+    }
+  }
+
+  // Create Post Conent
+  .content {
+    // --content-height: 118px;
+    color: var(--text-link-color);
+    // height: var(--content-height);
+    padding: var(--pd);
+  }
+
+  // Create Post Footer
+  .footer {
+    padding: var(--pd);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-link-color);
+    background-color: var(--primary-bg-subtle-color);
+
+    .attachmentWrapper {
+      display: flex;
+      align-items: center;
+
+      .customFormItem {
+        margin-bottom: 0;
+        cursor: pointer;
+      }
+
+      .attechmentItem {
+        color: var(--text-link-color);
+        display: flex;
+        padding: 0 10px;
+        cursor: pointer;
+
+        label {
+          @include mid(true);
+          cursor: pointer;
+        }
+
+        &:first-child {
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+    }
+  }
+}

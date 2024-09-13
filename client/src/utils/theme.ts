@@ -15,6 +15,9 @@ const theme: ThemeConfig = {
     },
     Input: {
       borderRadiusLG: 4
+    },
+    Button: {
+      borderRadius: 4
     }
   }
 }

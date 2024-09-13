@@ -1,16 +1,15 @@
 @import '../../styles/mixins';
 
 .userLayout {
-  display: flex;
-  align-items: flex-start;
   width: calc(100% - var(--w-sidebar));
   margin-left: auto;
   padding: calc(var(--h-header) + 42px) 148px 20px 148px;
 
   @include sm {
     width: 100%;
-    padding-left: 0;
-    padding-bottom: 0;
-    padding-right: 0;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+    margin-left: auto;
+    margin-right: auto;
   }
 }
