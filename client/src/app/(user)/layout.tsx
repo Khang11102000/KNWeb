@@ -1,9 +1,9 @@
 import Footer from '@/app/(user)/_components/footer'
 import Header from '@/app/(user)/_components/header'
 import Sidebar from '@/app/(user)/_components/sidebar'
+import clsx from 'clsx'
 import { ReactNode } from 'react'
 import userLayoutStyles from './user-layout.module.scss'
-import clsx from 'clsx'
 
 const { userLayout, mainWrapper } = userLayoutStyles
 

@@ -159,6 +159,15 @@
   -ms-transform-origin: $agrs;
 }
 
+/*----------------------- Box Shadow -----------------------*/
+@mixin box-shadow($agrs) {
+  box-shadow: $agrs;
+  -webkit-box-shadow: $agrs;
+  -moz-box-shadow: $agrs;
+  -o-box-shadow: $agrs;
+  -ms-box-shadow: $agrs;
+}
+
 // ------------------------------ Text CSS -----------------------------------
 @mixin text(
   $color,
