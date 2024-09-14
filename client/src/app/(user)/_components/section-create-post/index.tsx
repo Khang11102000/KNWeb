@@ -153,7 +153,7 @@ const SectionCreatePost = () => {
                           }}
                         />
 
-                        {/* Close Btn */}
+                        {/* Close Button*/}
                         <Trash
                           className={clsx(removeBtn)}
                           onClick={(e) => handleRemovePreviewImage(e, id)}
