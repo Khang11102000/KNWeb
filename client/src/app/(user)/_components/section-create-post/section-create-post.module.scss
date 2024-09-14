@@ -29,10 +29,30 @@
 
   // Create Post Conent
   .content {
-    // --content-height: 118px;
     color: var(--text-link-color);
-    // height: var(--content-height);
     padding: var(--pd);
+
+    .previewListImages {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      gap: 10px;
+
+      .previewItem {
+        position: relative;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: var(--border-radius-small);
+        overflow: hidden;
+
+        .removeBtn {
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 20;
+          cursor: pointer;
+        }
+      }
+    }
   }
 
   // Create Post Footer

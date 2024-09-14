@@ -2,9 +2,16 @@
 import envConfig from '@/config/environment'
 import { Button, Form, Input, Space } from 'antd'
 import clsx from 'clsx'
-import { Camera, Ellipsis, MapPin, UserRoundPlus } from 'lucide-react'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { Camera, Ellipsis, MapPin, Trash, UserRoundPlus } from 'lucide-react'
+import {
+  ChangeEvent,
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState
+} from 'react'
 import styles from './section-create-post.module.scss'
+import Image from 'next/image'
 
 const {
   sectionCreatePost,
@@ -16,7 +23,10 @@ const {
   attachmentWrapper,
   attechmentItem,
   createPostContainer,
-  customFormItem
+  customFormItem,
+  previewListImages,
+  previewItem,
+  removeBtn
 } = styles
 
 type FieldType = {
@@ -26,12 +36,19 @@ type FieldType = {
 
 const SectionCreatePost = () => {
   const [form] = Form.useForm()
-  const [previewImages, setPreviewImages] = useState<string[]>([])
+  const [previewImages, setPreviewImages] = useState<
+    { id: string; url: string }[]
+  >([])
   const [rawImages, setRawImages] = useState<any[]>([])
 
   const handleCreatePost = (values: FieldType) => {
     if (values.images && previewImages.length > 0) {
-      console.log('🚀values---->', { ...values, images: [...previewImages] })
+      console.log('🚀values---->', {
+        ...values,
+        images: [...previewImages.map((item) => item.url)]
+      })
+    } else {
+      console.log('🚀values---->', { ...values, images: undefined })
     }
   }
 
@@ -55,7 +72,10 @@ const SectionCreatePost = () => {
 
         console.log('data', data)
         if (data?.public_id) {
-          setPreviewImages((prev) => [...prev, data.secure_url])
+          setPreviewImages((prev) => [
+            ...prev,
+            { id: data.public_id, url: data.secure_url }
+          ])
         }
       } catch (error) {
         console.log('🚀error---->', error)
@@ -65,6 +85,13 @@ const SectionCreatePost = () => {
 
   const handleImagesChange = async (e: ChangeEvent<HTMLInputElement>) => {
     setRawImages((prev) => [...prev, ...Array.from(e.target.files as any)])
+  }
+
+  const handleRemovePreviewImage = (e: MouseEvent<SVGElement>, id: string) => {
+    e.stopPropagation()
+    setPreviewImages((prev) => {
+      return prev.filter((item) => item.id !== id)
+    })
   }
 
   useEffect(() => {
@@ -106,6 +133,38 @@ const SectionCreatePost = () => {
                   }}
                 />
               </Form.Item>
+
+              {/* Preview List */}
+              {previewImages.length > 0 && (
+                <div className={clsx(previewListImages)}>
+                  {previewImages.map((item) => {
+                    const { id, url } = item || {}
+                    return (
+                      <div key={id} className={clsx(previewItem)}>
+                        <Image
+                          width={150}
+                          height={150}
+                          src={url}
+                          alt=''
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
+
+                        {/* Close Btn */}
+                        <Trash
+                          className={clsx(removeBtn)}
+                          onClick={(e) => handleRemovePreviewImage(e, id)}
+                          color='#f14646'
+                          style={{ backgroundColor: 'white', padding: 4 }}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Footer */}
@@ -146,6 +205,7 @@ const SectionCreatePost = () => {
                   type='primary'
                   htmlType='submit'
                   style={{ paddingInline: '20px' }}
+                  onClick={() => form.submit()}
                 >
                   Post
                 </Button>
