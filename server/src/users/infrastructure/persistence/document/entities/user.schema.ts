@@ -28,7 +28,7 @@ export class UserSchemaClass extends EntityDocumentHelper {
   })
   @Prop({
     type: String,
-    unique: true,
+    // unique: true,
   })
   @Expose({ groups: ['me', 'admin'], toPlainOnly: true })
   email: string | null;

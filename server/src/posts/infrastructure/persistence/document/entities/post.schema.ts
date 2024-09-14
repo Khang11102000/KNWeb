@@ -14,6 +14,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import databaseConfig from 'src/database/config/database.config';
 import { DatabaseConfig } from 'src/database/config/database-config.type';
 import { UserSchema, UserSchemaClass } from 'src/users/infrastructure/persistence/document/entities/user.schema';
+import { CommentSchemaClass } from 'src/comment/infrastructure/persistence/document/entities/comment.schema';
 
 export type PostSchemaDocument = HydratedDocument<PostSchemaClass>;
 
@@ -51,8 +52,10 @@ export class PostSchemaClass extends EntityDocumentHelper {
   @ApiProperty({
     type: String,
   })
+  @Prop({
+    type: String,
+  })
   photo: string | null;
-
 
   @ApiProperty()
   @Prop({ default: now })
@@ -65,12 +68,12 @@ export class PostSchemaClass extends EntityDocumentHelper {
   @ApiProperty()
   @Prop()
   deletedAt: Date;
+
+  comments?: CommentSchemaClass[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(PostSchemaClass);
 
-// PostSchema.virtual('previousPassword').get(function () {
-//   return this.password;
+// PostSchema.virtual('comments').get(function () {
+//   return this.comments;
 // });
-
-// PostSchema.index({ 'role._id': 1 });

@@ -35,6 +35,8 @@ import { Posts } from './domain/post';
 import { PostsService } from './posts.service';
 import { RolesGuard } from '../roles/roles.guard';
 import { infinityPagination } from '../utils/infinity-pagination';
+import { UserDto } from 'src/users/dto/user.dto';
+import { User } from 'src/users/domain/user';
 
 @ApiBearerAuth()
 @Roles(RoleEnum.user)
@@ -55,18 +57,18 @@ export class PostsController {
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createProfileDto: CreatePostDto): Promise<Posts> {
-    return this.postsService.create(createProfileDto);
+  create(@Body() createPostDto: CreatePostDto): Promise<Posts> {
+    return this.postsService.create(createPostDto);
   }
 
-  @ApiOkResponse({
-    type: InfinityPaginationResponse(Posts),
-  })
-  @SerializeOptions({
-    groups: ['user'],
-  })
-  @Get()
-  @HttpCode(HttpStatus.OK)
+  // @ApiOkResponse({
+  //   type: InfinityPaginationResponse(Posts),
+  // })
+  // @SerializeOptions({
+  //   groups: ['user'],
+  // })
+  // @Get()
+  // @HttpCode(HttpStatus.OK)
   // async findAll(
   //   @Query() query: QueryPostDto,
   // ): Promise<InfinityPaginationResponseDto<Post>> {
@@ -95,6 +97,7 @@ export class PostsController {
   @SerializeOptions({
     groups: ['user'],
   })
+  //Find
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiParam({
@@ -102,8 +105,31 @@ export class PostsController {
     type: String,
     required: true,
   })
-  findOne(@Param('id') id: Posts['id']): Promise<NullableType<Posts>> {
+  findById(@Param('id') id: Posts['id']): Promise<NullableType<Posts>> {
     return this.postsService.findById(id);
+  }
+
+  @Get('user/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  @HttpCode(HttpStatus.OK)
+  findByUserInfo(@Param('id') id: User['id']): Promise<NullableType<Posts[]>> {
+    return this.postsService.findByUserInfo(id);
+  }
+ 
+  @Get('key/:keyword')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'keyword',
+    type: String,
+    required: true,
+  })
+  findByKeyword(@Param('keyword') keyword: string): Promise<NullableType<Posts[]>> {
+    return this.postsService.findByKeyword(keyword);
   }
 
   @ApiOkResponse({

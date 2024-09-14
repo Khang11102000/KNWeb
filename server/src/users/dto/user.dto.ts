@@ -40,13 +40,13 @@ export class UserDto implements User {
     type: String
   })
   photo?: string;
-  @ApiPropertyOptional({ type: RoleDto })
-  @IsOptional()
-  @Type(() => RoleDto)
+  // @ApiPropertyOptional({ type: RoleDto })
+  // @IsOptional()
+  // @Type(() => RoleDto)
   role?: Role | null | undefined;
-  @ApiPropertyOptional({ type: StatusDto })
-  @IsOptional()
-  @Type(() => StatusDto)
+  // @ApiPropertyOptional({ type: StatusDto })
+  // @IsOptional()
+  // @Type(() => StatusDto)
   status?: Status | undefined;
   createdAt: Date;
   updatedAt: Date;

@@ -1,6 +1,5 @@
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
-import { IPaginationOptions } from '../../../utils/types/pagination-options';
 import { Posts } from '../../domain/post';
 
 export abstract class PostRepository {
@@ -9,7 +8,8 @@ export abstract class PostRepository {
   ): Promise<Posts>;
 
   abstract findById(id: Posts['id']): Promise<NullableType<Posts>>;
-  abstract findByUserInfo(user: Posts['poster']): Promise<NullableType<Posts>>;
+  abstract findByUserInfo(user: Posts['poster']['id']): Promise<NullableType<Posts[]>>;
+  abstract findByKeyword(keyword: any): Promise<NullableType<Posts[]>>;
 
   abstract update(
     id: Posts['id'],

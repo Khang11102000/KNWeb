@@ -1,5 +1,3 @@
-import { FileType } from '../../files/domain/file';
-import { Status } from '../../statuses/domain/status';
 import { ApiProperty } from '@nestjs/swagger';
 import databaseConfig from '../../database/config/database.config';
 import { DatabaseConfig } from '../../database/config/database-config.type';
@@ -20,26 +18,12 @@ export class Comment {
   @ApiProperty({
     type: idType,
   })
-  postId?: number | string;
+  postId: number | string;
 
   @ApiProperty({
     type: idType,
   })
-  commentId?: number | string;
-  // @ApiProperty({
-  //   type: String,
-  // })
-  // auid: string;
-
-  // @ApiProperty({
-  //   type: String,
-  // })
-  // postAuid: string;
-
-  // @ApiProperty({
-  //   type: String,
-  // })
-  // commentAuid: string;
+  commentId: number | string;
 
   @ApiProperty({
     type: () => User,
@@ -50,12 +34,12 @@ export class Comment {
     type: String,
     example: 'No Content',
   })
-  content: string | null;
+  content: string;
 
   @ApiProperty({
-    type: Array
+    type: Array<Comment>,
   })
-  comments: string[];
+  comments?: Comment[];
 
   @ApiProperty()
   createdAt: Date;

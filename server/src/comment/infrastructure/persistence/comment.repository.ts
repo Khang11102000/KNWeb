@@ -8,13 +8,8 @@ export abstract class CommentRepository {
     data: Omit<Comment, 'id' | 'createdAt' | 'deletedAt' | 'updatedAt'>,
   ): Promise<Comment>;
 
-  // abstract findManyWithPagination({
-  //   paginationOptions,
-  // }: {
-  //   paginationOptions: IPaginationOptions;
-  // }): Promise<Posts[]>;
-
   abstract findById(id: Comment['id']): Promise<NullableType<Comment>>;
+  abstract findByPostOrComment(id: Comment['id']): Promise<NullableType<Comment[]>>;
 
   abstract update(
     id: Comment['id'],

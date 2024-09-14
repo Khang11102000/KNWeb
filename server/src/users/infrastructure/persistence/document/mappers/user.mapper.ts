@@ -1,7 +1,5 @@
 import { User } from '../../../../domain/user';
 import { UserSchemaClass } from '../entities/user.schema';
-import { FileSchemaClass } from '../../../../../files/infrastructure/persistence/document/entities/file.schema';
-import { FileMapper } from '../../../../../files/infrastructure/persistence/document/mappers/file.mapper';
 import { Role } from '../../../../../roles/domain/role';
 import { Status } from '../../../../../statuses/domain/status';
 import { RoleSchema } from '../../../../../roles/infrastructure/persistence/document/entities/role.schema';

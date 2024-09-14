@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import databaseConfig from '../../database/config/database.config';
 import { DatabaseConfig } from '../../database/config/database-config.type';
 import { User } from 'src/users/domain/user';
+import { Comment } from 'src/comment/domain/comment';
 
 // <database-block>
 const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
@@ -38,9 +39,9 @@ export class Posts {
   status: number;
 
   @ApiProperty({
-    type: Array,
+    type: Array<Comment>,
   })
-  comments: string[];
+  comments?: Comment[];
   
   @ApiProperty()
   createdAt: Date;

@@ -20,17 +20,23 @@ export class CommentService {
     const clonedPayload = {
       ...createCommentDto,
     };
-
-
+    if (!clonedPayload.content) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          status: 'noContent',
+        },
+      });
+    }
+    console.log("2", createCommentDto)
     return this.commentRepository.create(clonedPayload);
   }
-
 
   findById(id: Comment['id']): Promise<NullableType<Comment>> {
     return this.commentRepository.findById(id);
   }
-  findByPostOrComment(id: Comment['id']): Promise<NullableType<Comment>> {
-    return this.commentRepository.findById(id);
+  findByPostOrComment(id: Comment['id']): Promise<NullableType<Comment[]>> {
+    return this.commentRepository.findByPostOrComment(id);
   }
   async update(
     id: Comment['id'],

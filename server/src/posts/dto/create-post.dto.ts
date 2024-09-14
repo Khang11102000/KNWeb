@@ -6,6 +6,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { UserDto } from 'src/users/dto/user.dto';
+import { Comment } from 'src/comment/domain/comment';
 
 export class CreatePostDto {
   @IsNotEmpty()
@@ -21,5 +22,4 @@ export class CreatePostDto {
   @IsOptional()
   photo: string | null;
   status: number;
-  comments: string[];
 }

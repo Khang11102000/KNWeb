@@ -23,11 +23,12 @@ export class PostsService {
   findById(id: Posts['id']): Promise<NullableType<Posts>> {
     return this.postsRepository.findById(id);
   }
-
-  findByUserInfo(user: Posts['poster']): Promise<NullableType<Posts>> {
-    return this.postsRepository.findByUserInfo(user);
+  findByUserInfo(userId: Posts['poster']['id']): Promise<NullableType<Posts[]>> {
+    return this.postsRepository.findByUserInfo(userId);
   }
-
+  findByKeyword(keyword: any): Promise<NullableType<Posts[]>> {
+    return this.postsRepository.findByKeyword(keyword);
+  }
   async create(createPostDto: CreatePostDto): Promise<Posts> {
     const clonedPayload = {
       ...createPostDto,
@@ -50,7 +51,6 @@ export class PostsService {
     }
     return this.postsRepository.create(clonedPayload);
   }
-
 
   async update(
     id: Posts['id'],

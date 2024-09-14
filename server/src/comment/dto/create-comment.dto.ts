@@ -16,23 +16,17 @@ const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
   : Number;
 // </database-block>
 export class CreateCommentDto {
-  @IsNotEmpty()
   @ApiProperty({ type: idType })
-  postId: string | number;
+  @IsOptional()
+  postId: number | string;;
+  @IsOptional()
   @ApiProperty({ type: idType })
-  commentId: string | number;
-  // @ApiProperty({ type: String })
-  // postAuid: string | null;
-  // @ApiProperty({ type: String })
-  // commentAuid: string | null;
-
+  commentId: number | string;
   @IsNotEmpty()
-  @ApiPropertyOptional({ type: UserDto })
+  @ApiPropertyOptional({ type: () => UserDto })
   @Type(() => UserDto)
   commenter: UserDto;
-
   @ApiProperty({ example: 'This is comment', type: String })
   @IsNotEmpty()
-  content: string | null;
-  comments: string[];
+  content: string;
 }

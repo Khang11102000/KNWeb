@@ -37,7 +37,7 @@ import { RolesGuard } from '../roles/roles.guard';
 import { infinityPagination } from '../utils/infinity-pagination';
 
 @ApiBearerAuth()
-@Roles(RoleEnum.admin)
+@Roles(RoleEnum.user)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Comment')
 @Controller({
@@ -45,7 +45,7 @@ import { infinityPagination } from '../utils/infinity-pagination';
   version: '1',
 })
 export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(private readonly commentService: CommentService) { }
 
   @ApiCreatedResponse({
     type: Post,
@@ -55,16 +55,9 @@ export class CommentController {
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createProfileDto: CreateCommentDto): Promise<Comment> {
-    return this.commentService.create(createProfileDto);
+  create(@Body() createCommentDto: CreateCommentDto): Promise<Comment> {
+    return this.commentService.create(createCommentDto);
   }
-
-  @ApiOkResponse({
-    type: InfinityPaginationResponse(Comment),
-  })
-  @SerializeOptions({
-    groups: ['user'],
-  })
 
   @ApiOkResponse({
     type: Post,
@@ -72,6 +65,7 @@ export class CommentController {
   @SerializeOptions({
     groups: ['user'],
   })
+  //Find
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiParam({
@@ -79,8 +73,19 @@ export class CommentController {
     type: String,
     required: true,
   })
-  findOne(@Param('id') id: Comment['id']): Promise<NullableType<Comment>> {
+  findById(@Param('id') id: Comment['id']): Promise<NullableType<Comment>> {
     return this.commentService.findById(id);
+  }
+
+  @Get('post-or-comment/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  findByPostOrComment(@Param('id') id: Comment['id']): Promise<NullableType<Comment[]>> {
+    return this.commentService.findByPostOrComment(id);
   }
 
   @ApiOkResponse({

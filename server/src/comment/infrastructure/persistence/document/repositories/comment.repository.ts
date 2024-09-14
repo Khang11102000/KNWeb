@@ -19,27 +19,30 @@ export class CommentDocumentRepository implements CommentRepository {
   async create(data: Comment): Promise<Comment> {
     const persistenceModel = CommentMapper.toPersistence(data);
     const createdComment = new this.commentModel(persistenceModel);
-    const postObject = await createdComment.save();
-    return CommentMapper.toDomain(postObject);
+    const commentObject = await createdComment.save();
+    return CommentMapper.toDomain(commentObject);
   }
 
 
   async findById(id: Comment['id']): Promise<NullableType<Comment>> {
-    const postObject = await this.commentModel.findById(id);
-    return postObject ? CommentMapper.toDomain(postObject) : null;
+    const commentObject = await this.commentModel.findById(id);
+    return commentObject ? CommentMapper.toDomain(commentObject) : null;
   }
-  async findByPostOrComment(id: Comment['id']): Promise<NullableType<Comment>> {
-    var ObjectId = require('mongoose').Types.ObjectId;
+  async findByPostOrComment(id: Comment['id']): Promise<NullableType<Comment[]>> {
+    // var ObjectId = require('mongoose').Types.ObjectId;
 
-    let postObject
-    if (typeof (id) === 'string') {
-      var objId = new ObjectId((id.length < 12) ? "123456789012" : id);
-      postObject = await this.commentModel.find(
-        { $or: [{ '_id': objId }, { 'postId': id }, { 'commentId': id }] }
-      );
-    }
+    // if (typeof (id) === 'string') {
+    //   var objId = new ObjectId((id.length < 12) ? "123456789012" : id);
+    //   const commentObject = await this.commentModel.find(
+    //     { $or: [{ 'postId': id }, { 'commentId': id }] }
+    //   )
+    // }
+    const commentObjects = await this.commentModel.find(
+      { $or: [{ 'postId': id }, { 'commentId': id }] }
+    );
+    // return commentObject ? CommentMapper.toDomain(commentObject) : null;
+    return commentObjects.map((commentObject) => CommentMapper.toDomain(commentObject));
 
-    return postObject ? CommentMapper.toDomain(postObject) : null;
   }
 
 
@@ -54,7 +57,7 @@ export class CommentDocumentRepository implements CommentRepository {
       return null;
     }
 
-    const postObject = await this.commentModel.findOneAndUpdate(
+    const commentObject = await this.commentModel.findOneAndUpdate(
       filter,
       CommentMapper.toPersistence({
         ...CommentMapper.toDomain(post),
@@ -63,7 +66,7 @@ export class CommentDocumentRepository implements CommentRepository {
       { new: true },
     );
 
-    return postObject ? CommentMapper.toDomain(postObject) : null;
+    return commentObject ? CommentMapper.toDomain(commentObject) : null;
   }
 
   async remove(id: Comment['id']): Promise<void> {

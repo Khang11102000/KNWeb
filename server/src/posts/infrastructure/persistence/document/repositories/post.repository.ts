@@ -7,6 +7,7 @@ import { PostSchemaClass } from '../entities/post.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PostMapper } from '../mappers/post.mapper';
+import { CommentSchemaClass } from 'src/comment/infrastructure/persistence/document/entities/comment.schema';
 
 @Injectable()
 export class PostsDocumentRepository implements PostRepository {
@@ -14,9 +15,9 @@ export class PostsDocumentRepository implements PostRepository {
     @InjectModel(PostSchemaClass.name)
     private readonly postsModel: Model<PostSchemaClass>,
   ) { }
+  private readonly commentModel: Model<CommentSchemaClass>
 
   async create(data: Posts): Promise<Posts> {
-
     const persistenceModel = PostMapper.toPersistence(data);
     const createdPost = new this.postsModel(persistenceModel);
     const postObject = await createdPost.save();
@@ -28,20 +29,34 @@ export class PostsDocumentRepository implements PostRepository {
     return postObject ? PostMapper.toDomain(postObject) : null;
   }
 
-  async findByUserInfo(user: Posts['poster']): Promise<NullableType<Posts>> {
-    let postObject
-    if (user.id) {
-      postObject = await this.postsModel.findOne({ 'poster.id': user.id });
-    }
-    else {
-      postObject = await this.postsModel.find({ 
-        'poster.firstName': user.firstName, 
-        'poster.lastName': user.lastName,
-      });
+  async findByUserInfo(userId: Posts['poster']['id']): Promise<NullableType<Posts[]>> {
+    // if (typeof (user.id) === 'string') {
+    //   var objId = new ObjectId((user.id.length < 12) ? "123456789012" : user.id);
+    // }
+    const postObjects = await this.postsModel.find({ 'poster.id': userId }).sort({ createAt: 1 })
+    // postObjects.map(async (pt, index) => {
+    //   const comments = await (this.commentModel || []).find({ 'postId': pt.id })
+    //   if (comments && comments.length > 0) {
+    //     pt.comments = [...comments]
+    //   }
+    //   return pt
+    // })
 
-    }
-    return postObject ? PostMapper.toDomain(postObject) : null;
+    return postObjects.map((postObject) => PostMapper.toDomain(postObject));
   }
+  async findByKeyword(keyword: string): Promise<NullableType<Posts[]>> {
+    var regex = new RegExp(keyword, 'i');
+    const postObject = await this.postsModel.find({
+      $or: [
+      { 'content': regex },
+      { 'poster.firstName': regex },
+      { 'poster.lastName': regex }
+      ]
+    }).sort({ createAt: 1 });
+
+    return postObject.map((postObject) => PostMapper.toDomain(postObject));
+  }
+
   async update(id: Posts['id'], payload: Partial<Posts>): Promise<Posts | null> {
     const clonedPayload = { ...payload };
     delete clonedPayload.id;
@@ -52,7 +67,6 @@ export class PostsDocumentRepository implements PostRepository {
     if (!post) {
       return null;
     }
-
     const postObject = await this.postsModel.findOneAndUpdate(
       filter,
       PostMapper.toPersistence({

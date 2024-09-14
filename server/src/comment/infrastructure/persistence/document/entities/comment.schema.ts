@@ -18,22 +18,29 @@ const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
   timestamps: true,
   toJSON: {
     getters: true,
+    virtuals: true,
   },
 })
 
 export class CommentSchemaClass extends EntityDocumentHelper {
-  // @ApiProperty({
-  //   type: idType,
-  // })
-  // postId?: number | string;
+  @ApiProperty({
+    type: idType,
+  })
+  @Prop({
+    type: idType,
+  })
+  postId: number | string;
 
-  // @ApiProperty({
-  //   type: idType,
-  // })
-  // commentId?: number | string;
-  // @ApiProperty({
-  //   type: () => UserSchemaClass,
-  // })
+  @ApiProperty({
+    type: idType,
+  })
+  @Prop({
+    type: idType,
+  })
+  commentId: number | string;
+  @ApiProperty({
+    type: () => UserSchemaClass,
+  })
   @Prop({
     type: UserSchemaClass,
   })
@@ -42,6 +49,9 @@ export class CommentSchemaClass extends EntityDocumentHelper {
   @ApiProperty({
     type: String,
     example: 'No content',
+  })
+  @Prop({
+    type: String,
   })
   content: string;
 
