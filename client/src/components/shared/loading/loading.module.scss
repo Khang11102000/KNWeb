@@ -1,0 +1,7 @@
+@import '../../../styles/mixins';
+
+.loadingWrapper {
+  @include full-screen();
+  @include mid(true);
+  background-color: var(--white-color);
+}
