@@ -13,6 +13,12 @@ const nextConfig = {
         hostname: 'res.cloudinary.com',
         port: ''
         // pathname: '/account123/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: ''
+        // pathname: '/account123/**'
       }
     ]
   }
