@@ -1,0 +1,9 @@
+.postCard {
+  --pd-card: 26px;
+
+  .ant-card {
+    .headerCard.ant-card-head {
+      padding: var(--pd-card) !important;
+    }
+  }
+}

@@ -1,0 +1,49 @@
+@import '../../../../styles/mixins';
+
+.profilePage {
+  // Section Profile Header
+  .sectionProfileHeader {
+    padding: 16px 16px 0px 16px;
+    background-color: var(--white-color);
+    border-radius: var(--border-radius-small);
+
+    .coverImageWrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 960/250;
+      overflow: hidden;
+      border-radius: var(--border-radius-small);
+
+      .image {
+        @include mid-img();
+      }
+    }
+
+    .userInfo {
+      padding: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .contact {
+        position: relative;
+        display: flex;
+        gap: 22px;
+        align-items: center;
+        padding: 16px;
+
+        .avatar {
+          flex-shrink: 0;
+          position: absolute;
+          top: -50%;
+        }
+
+        .name {
+          padding-left: 122px;
+          color: var(--heading-color);
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@import '../../../../styles/mixins';
+
+.tabComponentWrapper {
+  ul {
+    display: flex;
+    align-items: center;
+
+    li {
+      @include transition(all var(--duration-time));
+      position: relative;
+      padding: 12px;
+      cursor: pointer;
+
+      // Hover & Active
+      &:hover,
+      &.active {
+        color: var(--primary-color);
+      }
+
+      &::before {
+        @include size(0, 2px);
+        @include transition(width var(--duration-time));
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: var(--primary-color);
+      }
+
+      &.active::before {
+        width: 100%;
+      }
+    }
+  }
+}
