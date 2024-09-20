@@ -4,18 +4,17 @@ import { PostsController } from './posts.controller';
 
 import { PostsService } from './posts.service';
 import { DocumentPostPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
-import { DatabaseConfig } from '../database/config/database-config.type';
-import databaseConfig from '../database/config/database.config';
-import { FilesModule } from '../files/files.module';
+import { CommentModule } from 'src/comment/comment.module';
+import { CommentService } from 'src/comment/comment.service';
 
 // <database-block>
 const infrastructurePersistenceModule =  DocumentPostPersistenceModule;
 // </database-block>
 
 @Module({
-  imports: [infrastructurePersistenceModule, FilesModule],
+  imports: [infrastructurePersistenceModule, CommentModule],
   controllers: [PostsController],
-  providers: [PostsService],
+  providers: [PostsService, CommentService],
   exports: [PostsService, infrastructurePersistenceModule],
 })
 export class PostsModule {}

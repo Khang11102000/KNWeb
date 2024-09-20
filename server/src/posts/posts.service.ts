@@ -9,25 +9,47 @@ import { NullableType } from '../utils/types/nullable.type';
 import { PostRepository } from './infrastructure/persistence/post.repository';
 import { Posts } from './domain/post';
 import { DeepPartial } from '../utils/types/deep-partial.type';
+import { CommentRepository } from 'src/comment/infrastructure/persistence/comment.repository';
+import { User } from 'src/users/domain/user';
 
 @Injectable()
 export class PostsService {
   constructor(
     private readonly postsRepository: PostRepository,
-  ) {}
+    private readonly commentRepository: CommentRepository,
 
-  //Search
-  // getNewFeed(id: Posts['id']): Promise<NullableType<Posts>> {
-  //   return this.postsRepository.findById(id);
-  // }
+  ) { }
+
+  //Find
+
   findById(id: Posts['id']): Promise<NullableType<Posts>> {
     return this.postsRepository.findById(id);
   }
-  findByUserInfo(userId: Posts['poster']['id']): Promise<NullableType<Posts[]>> {
-    return this.postsRepository.findByUserInfo(userId);
+  async findByUserId(userId: Posts['poster']['id']): Promise<NullableType<Posts[]>> {
+    const listPost = await this.postsRepository.findByUserId(userId);
+    listPost?.map(async (pt, i) => {
+      const comments = await this.commentRepository.findByPostOrComment(pt.id);
+      if (comments && comments.length > 0) {
+        pt.comments = [...comments]
+      }
+      return pt
+    })
+    return listPost;
   }
-  findByKeyword(keyword: any): Promise<NullableType<Posts[]>> {
-    return this.postsRepository.findByKeyword(keyword);
+  async findByKeyword(keyword: any): Promise<NullableType<Posts[]>> {
+    const listPost = await this.postsRepository.findByKeyword(keyword);
+    listPost?.map(async (pt, i) => {
+      const comments = await this.commentRepository.findByPostOrComment(pt.id);
+      if (comments && comments.length > 0) {
+        pt.comments = [...comments]
+      }
+      return pt
+    })
+    return listPost;
+  }
+  async findNewFeed(userInfo: User, token?: string): Promise<NullableType<Posts[]>> {
+    const listPost = await this.postsRepository.findNewFeed(userInfo);
+    return listPost;
   }
   async create(createPostDto: CreatePostDto): Promise<Posts> {
     const clonedPayload = {

@@ -70,7 +70,18 @@ export class User {
     type: () => Status,
   })
   status?: Status;
-
+  @ApiProperty({
+    type: Array<String>,
+  })
+  followings?: string[];
+  @ApiProperty({
+    type: Array<String>,
+  })
+  followers?: string[];
+  @ApiProperty({
+    type: Array<String>,
+  })
+  friends?: string[];
   @ApiProperty()
   createdAt: Date;
 

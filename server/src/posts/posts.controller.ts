@@ -117,8 +117,8 @@ export class PostsController {
     required: true,
   })
   @HttpCode(HttpStatus.OK)
-  findByUserInfo(@Param('id') id: User['id']): Promise<NullableType<Posts[]>> {
-    return this.postsService.findByUserInfo(id);
+  findByUserId(@Param('id') id: User['id']): Promise<NullableType<Posts[]>> {
+    return this.postsService.findByUserId(id);
   }
  
   @Get('key/:keyword')

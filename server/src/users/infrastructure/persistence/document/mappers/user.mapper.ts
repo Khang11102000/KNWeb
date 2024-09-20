@@ -17,7 +17,9 @@ export class UserMapper {
     domainEntity.firstName = raw.firstName;
     domainEntity.lastName = raw.lastName;
     domainEntity.photo = raw.photo;
-
+    domainEntity.followers = raw.followers
+    domainEntity.followings = raw.followings
+    domainEntity.friends = raw.friends
     if (raw.role) {
       domainEntity.role = new Role();
       domainEntity.role.id = raw.role._id;
@@ -64,6 +66,9 @@ export class UserMapper {
     persistenceSchema.photo = domainEntity.photo;
     persistenceSchema.role = role;
     persistenceSchema.status = status;
+    persistenceSchema.followers = domainEntity.followers;
+    persistenceSchema.followings = domainEntity.followings;
+    persistenceSchema.friends = domainEntity.friends;
     persistenceSchema.createdAt = domainEntity.createdAt;
     persistenceSchema.updatedAt = domainEntity.updatedAt;
     persistenceSchema.deletedAt = domainEntity.deletedAt;

@@ -24,6 +24,7 @@ import { MongooseConfigService } from './database/mongoose-config.service';
 import { DatabaseConfig } from './database/config/database-config.type';
 import { PostsModule } from './posts/posts.module';
 import { CommentModule } from './comment/comment.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 // <database-block>
 const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
@@ -92,7 +93,8 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     MailerModule,
     HomeModule,
     PostsModule,
-    CommentModule
+    CommentModule,
+    GatewayModule
   ],
 })
 export class AppModule {}

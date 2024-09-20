@@ -28,7 +28,6 @@ export class CommentService {
         },
       });
     }
-    console.log("2", createCommentDto)
     return this.commentRepository.create(clonedPayload);
   }
 

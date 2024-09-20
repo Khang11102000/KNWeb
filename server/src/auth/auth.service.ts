@@ -1,4 +1,5 @@
 import {
+  HttpException,
   HttpStatus,
   Injectable,
   NotFoundException,
@@ -37,7 +38,7 @@ export class AuthService {
     private sessionService: SessionService,
     private mailService: MailService,
     private configService: ConfigService<AllConfigType>,
-  ) {}
+  ) { }
 
   async validateLogin(loginDto: AuthEmailLoginDto): Promise<LoginResponseDto> {
     const user = await this.usersService.findByEmail(loginDto.email);
@@ -107,7 +108,16 @@ export class AuthService {
       user,
     };
   }
-
+  async handleVerifyToken(token) {
+    try {
+      const payload = this.jwtService.verifyAsync(token, {
+        secret: process.env.AUTH_JWT_SECRET
+      });
+      return payload['id'];
+    } catch (error) {
+      console.log(error)
+    }
+  }
   async validateSocialLogin(
     authProvider: string,
     socialData: SocialInterface,

@@ -15,12 +15,13 @@ import { RoleEnum } from '../roles/roles.enum';
 import { StatusEnum } from '../statuses/statuses.enum';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { DeepPartial } from '../utils/types/deep-partial.type';
+import { AddFriendDto } from './dto/add-friend-dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersRepository: UserRepository,
-  ) {}
+  ) { }
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
     const clonedPayload = {
@@ -102,7 +103,25 @@ export class UsersService {
   findByEmail(email: User['email']): Promise<NullableType<User>> {
     return this.usersRepository.findByEmail(email);
   }
-
+  async findByKeyword(keyword: any): Promise<NullableType<User[]>> {
+    const listUser = await this.usersRepository.findByKeyword(keyword);
+    return listUser;
+  }
+  async findByKeywordWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, keyword: any): Promise<User[]> {
+    return this.usersRepository.findByKeywordWithPagination({
+      filterOptions,
+      sortOptions,
+      paginationOptions,
+    }, keyword);
+  }
   findBySocialIdAndProvider({
     socialId,
     provider,
@@ -115,7 +134,6 @@ export class UsersService {
       provider,
     });
   }
-
   async update(
     id: User['id'],
     payload: DeepPartial<User>,
@@ -175,7 +193,10 @@ export class UsersService {
 
     return this.usersRepository.update(id, clonedPayload);
   }
+  async addFriend(addFriendDto: AddFriendDto): Promise<void> {
+    return this.usersRepository.addFriend(addFriendDto);
 
+  }
   async remove(id: User['id']): Promise<void> {
     await this.usersRepository.remove(id);
   }

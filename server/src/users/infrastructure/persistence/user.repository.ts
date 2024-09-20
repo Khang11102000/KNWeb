@@ -1,3 +1,4 @@
+import { AddFriendDto } from './../../dto/add-friend-dto';
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
@@ -29,7 +30,18 @@ export abstract class UserRepository {
     socialId: User['socialId'];
     provider: User['provider'];
   }): Promise<NullableType<User>>;
+  abstract findByKeyword(keyword: any): Promise<NullableType<User[]>>;
+  abstract findByKeywordWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, keyword: any): Promise<User[]>;
 
+  abstract addFriend(addFriendDto: AddFriendDto): Promise<void>
   abstract update(
     id: User['id'],
     payload: DeepPartial<User>,

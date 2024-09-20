@@ -35,9 +35,10 @@ import { User } from './domain/user';
 import { UsersService } from './users.service';
 import { RolesGuard } from '../roles/roles.guard';
 import { infinityPagination } from '../utils/infinity-pagination';
+import { AddFriendDto } from './dto/add-friend-dto';
 
 @ApiBearerAuth()
-@Roles(RoleEnum.admin)
+@Roles(RoleEnum.user)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Users')
 @Controller({
@@ -93,7 +94,7 @@ export class UsersController {
     type: User,
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: ['user'],
   })
   @Get(':id')
   @HttpCode(HttpStatus.OK)
@@ -105,7 +106,41 @@ export class UsersController {
   findOne(@Param('id') id: User['id']): Promise<NullableType<User>> {
     return this.usersService.findById(id);
   }
-
+  @Get('key/:keyword')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'keyword',
+    type: String,
+    required: true,
+  })
+  findByKeyword(@Param('keyword') keyword: string): Promise<NullableType<User[]>> {
+    return this.usersService.findByKeyword(keyword);
+  }
+  @Get('keyword-with-infinity/:keyword')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({
+    name: 'keyword',
+    type: String,
+    required: true,
+  })
+  async findByKeywordWithInfinity(@Query() query: QueryUserDto, @Param('keyword') keyword: string): Promise<InfinityPaginationResponseDto<User>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    return infinityPagination(
+      await this.usersService.findByKeywordWithPagination({
+        filterOptions: query?.filters,
+        sortOptions: query?.sort,
+        paginationOptions: {
+          page,
+          limit,
+        },
+      }, keyword),
+      { page, limit },
+    );
+  }
   @ApiOkResponse({
     type: User,
   })
@@ -125,7 +160,11 @@ export class UsersController {
   ): Promise<User | null> {
     return this.usersService.update(id, updateProfileDto);
   }
-
+  @Post('add-friend')
+  @HttpCode(HttpStatus.CREATED)
+  addFriend(@Body() addFriendDto: AddFriendDto): Promise<void> {
+    return this.usersService.addFriend(addFriendDto);
+  }
   @Delete(':id')
   @ApiParam({
     name: 'id',

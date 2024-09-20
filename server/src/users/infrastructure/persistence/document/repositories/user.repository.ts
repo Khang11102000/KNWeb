@@ -9,13 +9,24 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { UserMapper } from '../mappers/user.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { AddFriendDto } from 'src/users/dto/add-friend-dto';
 
 @Injectable()
 export class UsersDocumentRepository implements UserRepository {
   constructor(
     @InjectModel(UserSchemaClass.name)
     private readonly usersModel: Model<UserSchemaClass>,
-  ) {}
+  ) { }
+  async findByKeyword(keyword: string): Promise<NullableType<User[]>> {
+    var regex = keyword.split(' ').map(part => new RegExp(part, 'i'));
+    const userObjects = await this.usersModel.find({
+      $or: [
+        { firstName: { $in: regex } },
+        { lastName: { $in: regex } },
+      ]
+    });
+    return userObjects.map((userObject) => UserMapper.toDomain(userObject));
+  }
 
   async create(data: User): Promise<User> {
     const persistenceModel = UserMapper.toPersistence(data);
@@ -57,7 +68,45 @@ export class UsersDocumentRepository implements UserRepository {
 
     return userObjects.map((userObject) => UserMapper.toDomain(userObject));
   }
+  async findByKeywordWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, keyword): Promise<User[]> {
+    var regex = keyword.split(' ').map(part => new RegExp(part, 'i'));
+    const where: FilterQuery<UserSchemaClass> = {};
+    if (filterOptions?.roles?.length) {
+      where['role._id'] = {
+        $in: filterOptions.roles.map((role) => role.id.toString()),
+      };
+    }
 
+    const userObjects = await this.usersModel
+      .find({
+        $or: [
+          { firstName: { $in: regex } },
+          { lastName: { $in: regex } },
+        ]
+      })
+      .sort(
+        sortOptions?.reduce(
+          (accumulator, sort) => ({
+            ...accumulator,
+            [sort.orderBy === 'id' ? '_id' : sort.orderBy]:
+              sort.order.toUpperCase() === 'ASC' ? 1 : -1,
+          }),
+          {},
+        ),
+      )
+      .skip((paginationOptions.page - 1) * paginationOptions.limit)
+      .limit(paginationOptions.limit);
+
+    return userObjects.map((userObject) => UserMapper.toDomain(userObject));
+  }
   async findById(id: User['id']): Promise<NullableType<User>> {
     const userObject = await this.usersModel.findById(id);
     return userObject ? UserMapper.toDomain(userObject) : null;
@@ -109,7 +158,41 @@ export class UsersDocumentRepository implements UserRepository {
 
     return userObject ? UserMapper.toDomain(userObject) : null;
   }
+  async addFriend(addFriendDto: AddFriendDto): Promise<void> {
+    switch (addFriendDto.key) {
+      case 'sendFriendRequest':
+        await this.usersModel.updateOne(
+          { _id: addFriendDto.firstUserId },
+          { "$push": { "followings": addFriendDto.secondUserId } }
 
+        )
+        await this.usersModel.updateOne(
+          { _id: addFriendDto.secondUserId },
+          { "$push": { "followers": addFriendDto.firstUserId } }
+        )
+        break;
+      case 'acceptFriendRequest':
+        await this.usersModel.updateOne(
+          { _id: addFriendDto.firstUserId },
+          { "$push": { "friends": addFriendDto.secondUserId }, "$pull": { "followings": addFriendDto.secondUserId } }
+        )
+        await this.usersModel.updateOne(
+          { _id: addFriendDto.secondUserId },
+          { "$push": { "friends": addFriendDto.firstUserId }, "$pull": { "followers": addFriendDto.secondUserId } }
+        )
+        break;
+      case 'cancelFriendRequest':
+        await this.usersModel.updateOne(
+          { _id: addFriendDto.firstUserId },
+          { "$pull": { "followings": addFriendDto.secondUserId } }
+        )
+        await this.usersModel.updateOne(
+          { _id: addFriendDto.secondUserId },
+          { "$pull": { "followers": addFriendDto.firstUserId } }
+        )
+        break;
+    }
+  }
   async remove(id: User['id']): Promise<void> {
     await this.usersModel.deleteOne({
       _id: id.toString(),

@@ -104,6 +104,27 @@ export class UserSchemaClass extends EntityDocumentHelper {
   })
   status?: StatusSchema;
 
+  @ApiProperty({
+    type: Array<String>,
+  })
+  @Prop({
+    type: Array<String>,
+  })
+  followings?: string[];
+  @ApiProperty({
+    type: Array<String>,
+  })
+  @Prop({
+    type: Array<String>,
+  })
+  followers?: string[];
+  @ApiProperty({
+    type: Array<String>,
+  })
+  @Prop({
+    type: Array<String>,
+  })
+  friends?: string[];
   @ApiProperty()
   @Prop({ default: now })
   createdAt: Date;
