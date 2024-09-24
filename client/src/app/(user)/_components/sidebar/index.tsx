@@ -1,7 +1,7 @@
 import SidebarItem from '@/app/(user)/_components/sidebar/sidebar-item'
 import Logo from '@/components/shared/logo'
 import clsx from 'clsx'
-import { Group, Newspaper, UserRound, UsersRound } from 'lucide-react'
+import { Group, Newspaper, UserRound, UsersRound, Mail } from 'lucide-react'
 import { ReactNode } from 'react'
 import sidebarStyles from './sidebar.module.scss'
 import { PUBLIC_ROUTES } from '@/constants/routes'
@@ -52,6 +52,11 @@ const SIDEBAR_ITEMS: ISidebarItem[] = [
     text: 'Groups',
     icon: <Group />,
     path: '#groups'
+  },
+  {
+    text: 'Message',
+    icon: <Mail />,
+    path: '/message'
   }
 ]
 

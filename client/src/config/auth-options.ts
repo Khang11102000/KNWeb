@@ -22,7 +22,6 @@ export const authOptions: NextAuthOptions = {
         }
 
         const res = (await authService.loginByEmail(payload)) as ILoginResponse
-
         // Credentials Invalid Or Not Found
         if (
           res.status === HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.statusCode &&

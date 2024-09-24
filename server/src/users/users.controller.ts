@@ -46,7 +46,7 @@ import { AddFriendDto } from './dto/add-friend-dto';
   version: '1',
 })
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @ApiCreatedResponse({
     type: User,
@@ -86,6 +86,39 @@ export class UsersController {
           limit,
         },
       }),
+      { page, limit },
+    );
+  }
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(User),
+  })
+  @SerializeOptions({
+    groups: ['admin'],
+  })
+  @Get('all-friends:id')
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  @HttpCode(HttpStatus.OK)
+  async findAllFriends(
+    @Query() query: QueryUserDto, @Param('id') id: User['id']
+  ): Promise<InfinityPaginationResponseDto<User>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    return infinityPagination(
+      await this.usersService.findAllFriendsWithPagination({
+        filterOptions: query?.filters,
+        sortOptions: query?.sort,
+        paginationOptions: {
+          page,
+          limit,
+        },
+      }, id),
       { page, limit },
     );
   }

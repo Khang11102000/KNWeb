@@ -11,6 +11,8 @@ import { Posts } from './domain/post';
 import { DeepPartial } from '../utils/types/deep-partial.type';
 import { CommentRepository } from 'src/comment/infrastructure/persistence/comment.repository';
 import { User } from 'src/users/domain/user';
+import { FilterUserDto, SortUserDto } from 'src/users/dto/query-user.dto';
+import { IPaginationOptions } from 'src/utils/types/pagination-options';
 
 @Injectable()
 export class PostsService {
@@ -20,7 +22,6 @@ export class PostsService {
   ) {}
 
   //Find
-
   findById(id: Posts['id']): Promise<NullableType<Posts>> {
     return this.postsRepository.findById(id);
   }
@@ -28,6 +29,31 @@ export class PostsService {
     userId: Posts['poster']['id'],
   ): Promise<NullableType<Posts[]>> {
     const listPost = await this.postsRepository.findByUserId(userId);
+    listPost?.map(async (pt, i) => {
+      const comments = await this.commentRepository.findByPostOrComment(pt.id);
+      if (comments && comments.length > 0) {
+        pt.comments = [...comments];
+      }
+      return pt;
+    });
+    return listPost;
+  }
+  async findByUserIdWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  },
+    userId: Posts['poster']['id'],
+  ): Promise<Posts[]> {
+    const listPost = await this.postsRepository.findByUserIdWithPagination({
+      filterOptions,
+      sortOptions,
+      paginationOptions,
+    }, userId);
     listPost?.map(async (pt, i) => {
       const comments = await this.commentRepository.findByPostOrComment(pt.id);
       if (comments && comments.length > 0) {
@@ -48,13 +74,55 @@ export class PostsService {
     });
     return listPost;
   }
+  async findByKeywordWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, keyword: any): Promise<Posts[]> {
+    const listPost = await this.postsRepository.findByKeywordWithPagination({
+      filterOptions,
+      sortOptions,
+      paginationOptions,
+    }, keyword);
+    listPost?.map(async (pt, i) => {
+      const comments = await this.commentRepository.findByPostOrComment(pt.id);
+      if (comments && comments.length > 0) {
+        pt.comments = [...comments];
+      }
+      return pt;
+    });
+    return listPost;
+  }
   async findNewFeed(
     userInfo: User,
     token?: string,
   ): Promise<NullableType<Posts[]>> {
-    const listPost = await this.postsRepository.findNewFeed(userInfo);
+    const listPost = await this.postsRepository.findNewFeed(userInfo, token);
     return listPost;
   }
+  findNewFeedWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  },
+    userInfo: User,
+    token?: string,
+  ): Promise<Posts[]> {
+    return this.postsRepository.findNewFeedWithPagination({
+      filterOptions,
+      sortOptions,
+      paginationOptions,
+    }, userInfo, token);
+  }
+
   async create(createPostDto: CreatePostDto): Promise<Posts> {
     const clonedPayload = {
       ...createPostDto,
@@ -67,18 +135,6 @@ export class PostsService {
         },
       });
     }
-    // if (!clonedPayload.poster.role?.id) {
-    //   console.log(
-    //     '🚀clonedPayload.poster.role?.id---->',
-    //     clonedPayload.poster.role?.id,
-    //   );
-    //   throw new UnprocessableEntityException({
-    //     status: HttpStatus.UNPROCESSABLE_ENTITY,
-    //     errors: {
-    //       status: 'dataErrors',
-    //     },
-    //   });
-    // }
     return this.postsRepository.create(clonedPayload);
   }
 

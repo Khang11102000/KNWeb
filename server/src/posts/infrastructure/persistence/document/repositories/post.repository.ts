@@ -35,7 +35,7 @@ export class PostsDocumentRepository implements PostRepository {
   }
 
   async findByUserId(userId: Posts['poster']['id']): Promise<NullableType<Posts[]>> {
-    const postObjects = await this.postsModel.find({ 'poster.id': userId }).sort({ createAt: 1 })
+    const postObjects = await this.postsModel.find({ 'poster._id': userId }).sort({ createAt: 1 })
     return postObjects.map((postObject) => PostMapper.toDomain(postObject));
   }
   async findByUserIdWithPagination({
@@ -48,7 +48,7 @@ export class PostsDocumentRepository implements PostRepository {
     paginationOptions: IPaginationOptions;
   }, userId: Posts['poster']['id']): Promise<Posts[]> {
     const postsObjects = await this.postsModel
-      .find({ 'poster.id': userId })
+      .find({ 'poster._id': userId })
       .sort({ createAt: 1 })
       .skip((paginationOptions.page - 1) * paginationOptions.limit)
       .limit(paginationOptions.limit);
@@ -104,7 +104,7 @@ export class PostsDocumentRepository implements PostRepository {
       const cloneArray = [userInfo.followings].concat(userInfo.friends);
       const listPost: any[] = [];
       cloneArray.map(async (userId) => {
-        const postObjects = await this.postsModel.find({ 'poster.id': userId });
+        const postObjects = await this.postsModel.find({ 'poster._id': userId });
         if (postObjects && postObjects.length > 0) {
           listPost.concat(postObjects)
         }

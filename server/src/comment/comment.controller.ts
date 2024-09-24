@@ -48,7 +48,7 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) { }
 
   @ApiCreatedResponse({
-    type: Post,
+    type: Comment,
   })
   @SerializeOptions({
     groups: ['user'],
@@ -60,7 +60,7 @@ export class CommentController {
   }
 
   @ApiOkResponse({
-    type: Post,
+    type: Comment,
   })
   @SerializeOptions({
     groups: ['user'],
@@ -89,7 +89,7 @@ export class CommentController {
   }
 
   @ApiOkResponse({
-    type: Post,
+    type: Comment,
   })
   @SerializeOptions({
     groups: ['user'],

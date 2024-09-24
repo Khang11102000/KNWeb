@@ -95,7 +95,21 @@ export class UsersService {
       paginationOptions,
     });
   }
-
+  findAllFriendsWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, id: User['id']): Promise<User[]> {
+    return this.usersRepository.findAllFriendsWithPagination({
+      filterOptions,
+      sortOptions,
+      paginationOptions,
+    }, id);
+  }
   findById(id: User['id']): Promise<NullableType<User>> {
     return this.usersRepository.findById(id);
   }
