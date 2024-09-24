@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+import { hostname } from 'os'
 import path from 'path'
 const __dirname = path.resolve()
 const nextConfig = {
@@ -10,15 +11,15 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.com',
-        port: ''
-        // pathname: '/account123/**'
+        hostname: 'res.cloudinary.com'
       },
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
-        port: ''
-        // pathname: '/account123/**'
+        hostname: 'images.unsplash.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co'
       }
     ]
   }

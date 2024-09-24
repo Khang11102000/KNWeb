@@ -1,20 +1,18 @@
 'use client'
 import envConfig from '@/config/environment'
-import { Button, Form, Input, Space } from 'antd'
+import { Button, Form, Input, message, Space } from 'antd'
 import clsx from 'clsx'
 import { Camera, Ellipsis, MapPin, Trash, UserRoundPlus } from 'lucide-react'
-import {
-  ChangeEvent,
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useState
-} from 'react'
-import styles from './section-create-post.module.scss'
+import { ChangeEvent, MouseEvent, useEffect, useState } from 'react'
 import Image from 'next/image'
+import styles from './create-post.module.scss'
+import { useSession } from 'next-auth/react'
+import { ICreatePostPayload } from '@/types/post-type'
+import postService from '@/services/user/post-service'
+import { createPostAction } from '@/actions/user/post-action'
 
 const {
-  sectionCreatePost,
+  createPost,
   header,
   title,
   optionIconWrapper,
@@ -31,24 +29,55 @@ const {
 
 type FieldType = {
   content: string
-  images?: string[]
+  photo?: string | null
 }
 
-const SectionCreatePost = () => {
+interface ICreatePostProps {
+  classNames?: string
+  containerClassNames?: string
+}
+
+const CreatePost = ({ classNames, containerClassNames }: ICreatePostProps) => {
   const [form] = Form.useForm()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [previewImages, setPreviewImages] = useState<
     { id: string; url: string }[]
   >([])
   const [rawImages, setRawImages] = useState<any[]>([])
+  const { data: session, status } = useSession()
 
-  const handleCreatePost = (values: FieldType) => {
-    if (values.images && previewImages.length > 0) {
-      console.log('🚀values---->', {
-        ...values,
-        images: [...previewImages.map((item) => item.url)]
-      })
-    } else {
-      console.log('🚀values---->', { ...values, images: undefined })
+  const handleCreatePost = async (values: FieldType) => {
+    if (status === 'authenticated') {
+      const { id, email, firstName, lastName, photo } = session.user
+      if (values.photo && previewImages.length > 0) {
+        const payload: ICreatePostPayload = {
+          poster: {
+            id,
+            email,
+            firstName,
+            lastName,
+            photo
+          },
+          ...values,
+          photo: previewImages[0].url
+        }
+
+        setIsLoading(true)
+        try {
+          const res = await createPostAction(payload)
+          console.log('🚀res---->', res)
+          if (res?.id) {
+            message.success('Created post is successfully')
+            form.resetFields()
+            setPreviewImages([])
+            setRawImages([])
+          }
+        } catch (error) {
+          console.log('🚀error---->', error)
+        } finally {
+          setIsLoading(false)
+        }
+      }
     }
   }
 
@@ -70,7 +99,6 @@ const SectionCreatePost = () => {
 
         const data = await res.json()
 
-        console.log('data', data)
         if (data?.public_id) {
           setPreviewImages((prev) => [
             ...prev,
@@ -102,9 +130,9 @@ const SectionCreatePost = () => {
 
   return (
     <>
-      <section className={clsx(sectionCreatePost)}>
+      <div className={clsx(createPost, classNames)}>
         {/* Create Post */}
-        <div className={clsx(createPostContainer)}>
+        <div className={clsx(createPostContainer, containerClassNames)}>
           {/* Header */}
           <div className={clsx(header)}>
             <h2 className={clsx('heading', title)}>Add a post</h2>
@@ -114,7 +142,6 @@ const SectionCreatePost = () => {
           </div>
 
           {/* Content */}
-          {/* <div className={clsx(content)}>What are you thinking ?</div> */}
           <Form
             form={form}
             name='basic'
@@ -172,23 +199,17 @@ const SectionCreatePost = () => {
               {/* Attachment */}
               <div className={clsx(attachmentWrapper)}>
                 <Form.Item
-                  name='images'
+                  name='photo'
                   label={<Camera size={18} />}
                   className={clsx(customFormItem, attechmentItem)}
                 >
-                  {/* <div className={clsx(attechmentItem)}> */}
-                  {/* <label htmlFor='images'>
-                    <Camera size={18} />
-                  </label> */}
                   <Input
-                    // id='images'
                     type='file'
                     multiple
                     style={{ display: 'none' }}
                     onChange={handleImagesChange}
                     value={''}
                   />
-                  {/* </div> */}
                 </Form.Item>
                 <div className={clsx(attechmentItem)}>
                   <UserRoundPlus size={18} />
@@ -200,12 +221,11 @@ const SectionCreatePost = () => {
 
               {/* Actions */}
               <Space align='center'>
-                <Button type='text'>Discard</Button>
+                {/* <Button type='text'>Discard</Button> */}
                 <Button
                   type='primary'
                   htmlType='submit'
                   style={{ paddingInline: '20px' }}
-                  onClick={() => form.submit()}
                 >
                   Post
                 </Button>
@@ -213,9 +233,9 @@ const SectionCreatePost = () => {
             </div>
           </Form>
         </div>
-      </section>
+      </div>
     </>
   )
 }
 
-export default SectionCreatePost
+export default CreatePost

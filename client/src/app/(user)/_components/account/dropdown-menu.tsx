@@ -2,7 +2,7 @@ import { Typography } from 'antd'
 import clsx from 'clsx'
 import Link from 'next/link'
 import styles from './account.module.scss'
-import { forwardRef } from 'react'
+import { forwardRef, MouseEvent } from 'react'
 import {
   GlobeLock,
   LogOut,
@@ -10,6 +10,9 @@ import {
   UserRoundCog,
   UserRoundPen
 } from 'lucide-react'
+import { IUser } from '@/types/user-type'
+import { useRouter } from 'next/navigation'
+import { PRIVATE_ROUTES } from '@/constants/routes'
 
 const { dropDownWrapper, menuItem } = styles
 
@@ -22,21 +25,6 @@ const ACCOUNT_MENUS = [
     path: '/me'
   },
   {
-    icon: <UserRoundPen size={24} />,
-    title: 'Edit profile',
-    path: '/me'
-  },
-  {
-    icon: <UserRoundCog size={24} />,
-    title: 'Settings',
-    path: '/me'
-  },
-  {
-    icon: <GlobeLock size={24} />,
-    title: 'Privacy settings',
-    path: '/me'
-  },
-  {
     icon: <LogOut size={24} />,
     title: 'Logout',
     path: '/me'
@@ -45,14 +33,27 @@ const ACCOUNT_MENUS = [
 
 interface IDropdownMenuProps {
   classNames?: string
+  data: IUser | null
 }
 
 const DropdownMenu = forwardRef<HTMLDivElement, IDropdownMenuProps>(
-  ({ classNames = '' }, ref) => {
+  ({ data, classNames = '' }, ref) => {
+    const router = useRouter()
+    const { firstName, lastName, id } = data || {}
+
+    const _onTitleClick = (e: MouseEvent<HTMLElement>) => {
+      e.stopPropagation()
+      router.push(`${PRIVATE_ROUTES.USER.PROFILE}/${id}`)
+    }
+
     return (
       <div className={clsx(dropDownWrapper, classNames)} ref={ref}>
-        <Title level={5} style={{ padding: 26 }}>
-          Nguyễn Kim Quốc Nam
+        <Title
+          level={5}
+          style={{ padding: 26, cursor: 'pointer' }}
+          onClick={_onTitleClick}
+        >
+          {`${firstName} ${lastName}`}
         </Title>
 
         {/* Menu Item */}
