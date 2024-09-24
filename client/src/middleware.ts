@@ -10,13 +10,23 @@ const ADMIN_PATHS = [
   '/admin/profile'
 ]
 
+const USER_PATHS = ['/', '/me', '/profile/:path*']
+
 export default withAuth(
-  function middleware(request: NextRequestWithAuth) {
+  async function middleware(request: NextRequestWithAuth) {
     if (
       ADMIN_PATHS.some((path) => path === request.nextUrl.pathname) &&
       request.nextauth.token?.user.role.id !== ADMIN_ROLE.code
     ) {
       return NextResponse.redirect(new URL('/permission-denied', request.url))
+    }
+
+    if (
+      USER_PATHS.some((path) => path === request.nextUrl.pathname) &&
+      !request.nextauth.token
+    ) {
+      console.log('🚀1---->', 1)
+      return NextResponse.redirect(new URL('/login', request.url))
     }
   },
   {
@@ -32,6 +42,9 @@ export const config = {
     '/admin/dashboard',
     '/admin/users',
     '/admin/posts',
-    '/admin/profile'
+    '/admin/profile',
+    '/',
+    '/me',
+    '/profile/:path*'
   ]
 }

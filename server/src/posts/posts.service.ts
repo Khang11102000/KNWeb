@@ -17,23 +17,24 @@ export class PostsService {
   constructor(
     private readonly postsRepository: PostRepository,
     private readonly commentRepository: CommentRepository,
-
-  ) { }
+  ) {}
 
   //Find
 
   findById(id: Posts['id']): Promise<NullableType<Posts>> {
     return this.postsRepository.findById(id);
   }
-  async findByUserId(userId: Posts['poster']['id']): Promise<NullableType<Posts[]>> {
+  async findByUserId(
+    userId: Posts['poster']['id'],
+  ): Promise<NullableType<Posts[]>> {
     const listPost = await this.postsRepository.findByUserId(userId);
     listPost?.map(async (pt, i) => {
       const comments = await this.commentRepository.findByPostOrComment(pt.id);
       if (comments && comments.length > 0) {
-        pt.comments = [...comments]
+        pt.comments = [...comments];
       }
-      return pt
-    })
+      return pt;
+    });
     return listPost;
   }
   async findByKeyword(keyword: any): Promise<NullableType<Posts[]>> {
@@ -41,13 +42,16 @@ export class PostsService {
     listPost?.map(async (pt, i) => {
       const comments = await this.commentRepository.findByPostOrComment(pt.id);
       if (comments && comments.length > 0) {
-        pt.comments = [...comments]
+        pt.comments = [...comments];
       }
-      return pt
-    })
+      return pt;
+    });
     return listPost;
   }
-  async findNewFeed(userInfo: User, token?: string): Promise<NullableType<Posts[]>> {
+  async findNewFeed(
+    userInfo: User,
+    token?: string,
+  ): Promise<NullableType<Posts[]>> {
     const listPost = await this.postsRepository.findNewFeed(userInfo);
     return listPost;
   }
@@ -63,14 +67,18 @@ export class PostsService {
         },
       });
     }
-    if (!clonedPayload.poster.role?.id) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          status: 'dataErrors',
-        },
-      });
-    }
+    // if (!clonedPayload.poster.role?.id) {
+    //   console.log(
+    //     '🚀clonedPayload.poster.role?.id---->',
+    //     clonedPayload.poster.role?.id,
+    //   );
+    //   throw new UnprocessableEntityException({
+    //     status: HttpStatus.UNPROCESSABLE_ENTITY,
+    //     errors: {
+    //       status: 'dataErrors',
+    //     },
+    //   });
+    // }
     return this.postsRepository.create(clonedPayload);
   }
 

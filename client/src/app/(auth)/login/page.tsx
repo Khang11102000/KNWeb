@@ -13,7 +13,7 @@ const LoginPage = () => {
           width={102}
           height={28}
         />
-        <h1 className='hidden'>Instagram</h1>
+        <h1 style={{ display: 'none' }}>Instagram</h1>
       </Flex>
       <LoginForm />
     </div>

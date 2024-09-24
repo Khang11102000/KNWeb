@@ -15,5 +15,8 @@ export const PRIVATE_ROUTES = {
     MANAGE_USERS: `${ADMIN_ROUTE}/users`,
     MANAGE_POST: `${ADMIN_ROUTE}/posts`,
     PROFILE: `${ADMIN_ROUTE}/profile`
+  },
+  USER: {
+    PROFILE: `/profile`
   }
 }

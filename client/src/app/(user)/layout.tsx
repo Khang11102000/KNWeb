@@ -7,7 +7,7 @@ import userLayoutStyles from './user-layout.module.scss'
 
 const { userLayout, mainWrapper } = userLayoutStyles
 
-const UserLayout = ({ children }: { children: ReactNode }) => {
+const UserLayout = async ({ children }: { children: ReactNode }) => {
   return (
     <div>
       <Header />

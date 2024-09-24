@@ -2,7 +2,7 @@ import NextAuthProvider from '@/context/nextauth-provider'
 import '@/styles/globals.scss'
 import theme from '@/utils/theme'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
-import { ConfigProvider } from 'antd'
+import { ConfigProvider, notification } from 'antd'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 

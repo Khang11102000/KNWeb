@@ -1,16 +1,25 @@
-import React from 'react'
+import { getServerSession } from 'next-auth'
 import SectionProfileHeader from './section-profile-header'
-import styles from './profile-page.module.scss'
-import clsx from 'clsx'
+import ProfileTabs from '@/app/(user)/profile/[id]/profile-tabs'
+import { authOptions } from '@/config/auth-options'
+import postService from '@/services/user/post-service'
+import { IPost } from '@/types/post-type'
 
-const { profilePage } = styles
+const ProfilePage = async ({ params }: { params: { id: string } }) => {
+  const session = await getServerSession(authOptions)
+  const accessToken = session?.token as string
+  const userId = params.id
 
-const ProfilePage = () => {
+  const res = (await postService.getPostsByUser(accessToken, userId)) || []
+  const posts = res as IPost[]
+
   return (
-    <div className={clsx(profilePage)}>
-      {/* Section Profile Header */}
+    <>
       <SectionProfileHeader />
-    </div>
+      <section>
+        <ProfileTabs posts={posts} />
+      </section>
+    </>
   )
 }
 

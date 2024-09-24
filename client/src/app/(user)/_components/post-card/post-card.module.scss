@@ -1,9 +1,35 @@
+@import '../../../../styles/mixins';
+
 .postCard {
   --pd-card: 26px;
 
   .ant-card {
     .headerCard.ant-card-head {
       padding: var(--pd-card) !important;
+    }
+  }
+
+  .timeAgo {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-link-color);
+  }
+
+  .contentWrapper {
+    padding: 20px 0;
+
+    // POST IMAGES
+    .postImageWrapper {
+      display: flex;
+      width: 100%;
+      aspect-ratio: 534/262;
+      overflow: hidden;
+      border-radius: var(--border-radius-small);
+      margin-top: 26px;
+
+      .postImage {
+        @include mid-img();
+      }
     }
   }
 }

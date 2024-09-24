@@ -50,6 +50,9 @@ const TabsComponent = ({ items = [], classNames = '' }: TabsProps) => {
         items.map((item) => {
           item.key === tabActived && <div>{item.tabContent}</div>
         })} */}
+      {items[Number(tabActived) - 1] && (
+        <div>{items[Number(tabActived) - 1].tabContent}</div>
+      )}
     </div>
   )
 }

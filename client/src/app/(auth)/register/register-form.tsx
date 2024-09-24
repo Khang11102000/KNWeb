@@ -4,13 +4,15 @@ import { RULES } from '@/constants/messages'
 import { PUBLIC_ROUTES } from '@/constants/routes'
 import authService from '@/services/auth-service'
 import { IRegisterPayload } from '@/types/auth-type'
-import { Button, Checkbox, Flex, Form, Input } from 'antd'
+import { Button, Checkbox, Flex, Form, Input, message } from 'antd'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const RegisterForm = () => {
   const [form] = Form.useForm()
+  const router = useRouter()
 
-  // Handle Login
+  // Handle Register
   const onFinish = async (values: IRegisterPayload) => {
     // Call api register
     try {
@@ -18,13 +20,21 @@ const RegisterForm = () => {
         email: values.email,
         password: values.password,
         firstName: values.firstName,
-        lastName: values.lastName
+        lastName: values.lastName,
+        photo:
+          'https://media.istockphoto.com/id/619400810/photo/mr-who.webp?a=1&b=1&s=612x612&w=0&k=20&c=6cz9uumveIOesURahritB_WaN5aIkKy1lAOp_1VfBX8='
       }
 
       const res = await authService.register(payload)
-      console.log('🚀res---->', res)
-    } catch (error) {
-      console.log('🚀error---->', error)
+
+      if (res?.status === 422) {
+        throw res?.errors
+      } else {
+        message.success('Register is successfully')
+        router.push(PUBLIC_ROUTES.LOGIN)
+      }
+    } catch (error: any) {
+      message.error(error?.email || 'Register Failed. Please try again')
     }
   }
 

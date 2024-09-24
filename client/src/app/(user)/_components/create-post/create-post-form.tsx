@@ -1,8 +1,7 @@
 'use client'
-import { Avatar, Button, Divider, Flex, Form, Input, Modal, Space } from 'antd'
-import clsx from 'clsx'
-import { Camera, Ellipsis, MapPin, UserRoundPlus, X } from 'lucide-react'
-import { MouseEvent, SyntheticEvent, useState } from 'react'
+import { Avatar, Divider, Flex, Form, Input, Modal } from 'antd'
+import { X } from 'lucide-react'
+import { SyntheticEvent } from 'react'
 
 interface ICreatePostFormProps {
   isOpen: boolean

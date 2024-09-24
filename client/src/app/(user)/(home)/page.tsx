@@ -1,4 +1,4 @@
-import SectionCreatePost from '@/app/(user)/_components/section-create-post'
+import SectionCreatePost from '@/app/(user)/_components/create-post'
 
 const HomePage = () => {
   return (
