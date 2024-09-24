@@ -77,16 +77,17 @@ export class UsersDocumentRepository implements UserRepository {
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
   }, id: User['id']): Promise<User[]> {
-    let userObjects: any = [];
     const user = await this.usersModel.findOne({ '_id': id })
     if (user && user.friends) {
+      const friendObjects = await this.usersModel.find({ _id: { $in: user.friends } })
+      // user.friends.map(async (fId) => {
+      //   const friendObject = await this.usersModel.findOne({ '_id': fId })
+      //   if (friendObject) {
+      //     userObjects.push(friendObject)
+      //   }
+      // })
+      return friendObjects.map((userObject) => UserMapper.toDomain(userObject));
 
-      user.friends.map(async (fId) => {
-        const friendObject = await this.usersModel.findOne({ '_id': fId })
-        if (friendObject) {
-          userObjects.push(friendObject)
-        }
-      })
     }
 
     // userObjects.sort(
@@ -101,7 +102,7 @@ export class UsersDocumentRepository implements UserRepository {
     // )
     // .skip((paginationOptions.page - 1) * paginationOptions.limit)
     // .limit(paginationOptions.limit);
-    return userObjects.map((userObject) => UserMapper.toDomain(userObject));
+    return [];
   }
 
   async findByKeywordWithPagination({
