@@ -1,11 +1,12 @@
 'use client'
 import { RULES } from '@/constants/messages'
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
+import authService from '@/services/auth-service'
 import { ILoginPayload } from '@/types/auth-type'
 import { UserStatusEnum } from '@/types/user-type'
 import type { FormProps } from 'antd'
 import { Button, Flex, Form, Input, message, notification, Spin } from 'antd'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -13,6 +14,7 @@ import { useState } from 'react'
 const LoginForm = () => {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
+  const { data: session, status } = useSession()
 
   // Handle Login
   const onFinish: FormProps<ILoginPayload>['onFinish'] = async (values) => {

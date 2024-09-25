@@ -8,3 +8,8 @@ export interface EntityErrorResponse {
     [key: string]: string
   }
 }
+
+export interface NoContentResponse {
+  statusCode: 204
+  message: string
+}

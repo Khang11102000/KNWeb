@@ -25,7 +25,6 @@ export default withAuth(
       USER_PATHS.some((path) => path === request.nextUrl.pathname) &&
       !request.nextauth.token
     ) {
-      console.log('🚀1---->', 1)
       return NextResponse.redirect(new URL('/login', request.url))
     }
   },
