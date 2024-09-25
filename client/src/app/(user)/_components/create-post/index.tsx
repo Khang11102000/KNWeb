@@ -65,7 +65,6 @@ const CreatePost = ({ classNames, containerClassNames }: ICreatePostProps) => {
         setIsLoading(true)
         try {
           const res = await createPostAction(payload)
-          console.log('🚀res---->', res)
           if (res?.id) {
             message.success('Created post is successfully')
             form.resetFields()
@@ -74,6 +73,32 @@ const CreatePost = ({ classNames, containerClassNames }: ICreatePostProps) => {
           }
         } catch (error) {
           console.log('🚀error---->', error)
+        } finally {
+          setIsLoading(false)
+        }
+      } else {
+        const payload: ICreatePostPayload = {
+          poster: {
+            id,
+            email,
+            firstName,
+            lastName,
+            photo
+          },
+          ...values,
+          photo: undefined
+        }
+
+        setIsLoading(true)
+        try {
+          const res = await createPostAction(payload)
+          if (res?.id) {
+            message.success('Created post is successfully')
+            form.resetFields()
+            setPreviewImages([])
+            setRawImages([])
+          }
+        } catch (error) {
         } finally {
           setIsLoading(false)
         }

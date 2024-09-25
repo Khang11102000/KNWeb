@@ -1,7 +1,7 @@
 'use client'
 import { IPost } from '@/types/post-type'
 import { calculateHoursPassed } from '@/utils/helpers'
-import { Avatar, Card, Dropdown, Flex, MenuProps, Modal } from 'antd'
+import { Avatar, Card, Dropdown, Flex, MenuProps, message, Modal } from 'antd'
 import clsx from 'clsx'
 import { Ellipsis, Pencil, Trash } from 'lucide-react'
 import Image from 'next/image'
@@ -10,6 +10,9 @@ import { deletePostAction, editPostAction } from '@/actions/user/post-action'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import EditPost from '@/app/(user)/_components/post-card/edit-post'
+import useAuthenticated from '@/hooks/useAuthenticated'
+import authService from '@/services/auth-service'
+import { useSession } from 'next-auth/react'
 
 interface IPostCardProps {
   post: IPost
@@ -46,6 +49,7 @@ const { confirm } = Modal
 
 const PostCard = ({ post }: IPostCardProps) => {
   const params = useParams<{ id: string }>()
+  const { data: session, status } = useSession()
   const [isEditPostOpen, setIsEditPostOpen] = useState<boolean>(false)
   const { poster, content, createdAt, photo: postPhoto, id } = post || {}
   const { firstName, lastName, photo } = poster || {}
@@ -61,25 +65,23 @@ const PostCard = ({ post }: IPostCardProps) => {
     setIsEditPostOpen(false)
   }
 
-  const _onDeletePost = async (postId: string) => {
-    await deletePostAction(postId)
-  }
-
   const showDeleteConfirm = () => {
     confirm({
       title: 'Are you sure delete this post?',
-      // icon: ,
       centered: true,
       content: 'Some descriptions',
-      okText: 'Yes',
+      okText: 'Confirm',
       okType: 'danger',
-      cancelText: 'No',
-      onOk() {
-        _onDeletePost(id)
+      cancelText: 'Cancel',
+      onOk: async () => {
+        try {
+          const res = await deletePostAction(id)
+          message.success(res)
+        } catch (error: any) {
+          message.error(error)
+        }
       },
-      onCancel() {
-        console.log('Cancel')
-      }
+      onCancel() {}
     })
   }
 

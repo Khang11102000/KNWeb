@@ -26,6 +26,13 @@ const authService = {
   },
   confirmEmail(payload: IEmailConfirmPayload) {
     return http.post<any>('/auth/email/confirm', payload)
+  },
+  getMe(accessToken: string) {
+    return http.get('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
   }
 }
 
