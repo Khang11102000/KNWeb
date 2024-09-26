@@ -40,6 +40,8 @@ export const authOptions: NextAuthOptions = {
           )
         }
 
+        await authService.getMe(res.token)
+
         return res as any
       }
     })

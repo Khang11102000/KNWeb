@@ -3,11 +3,13 @@
 import { authOptions } from '@/config/auth-options'
 import HTTP_STATUS_CODES from '@/constants/http-status-codes'
 import postService from '@/services/user/post-service'
+import { NoContentResponse } from '@/types/http-type'
 import { ICreatePostPayload, IEditPostPayload, IPost } from '@/types/post-type'
 import EntityError from '@/utils/EntityError'
 import { getServerSession } from 'next-auth'
 import { revalidateTag } from 'next/cache'
 
+// CREATE NEW POST
 export async function createPostAction(data: ICreatePostPayload) {
   const session = await getServerSession(authOptions)
   const accessToken = session?.token as string
@@ -25,12 +27,12 @@ export async function createPostAction(data: ICreatePostPayload) {
   }
 }
 
+// EDIT POST
 export async function editPostAction(postId: string, data: IEditPostPayload) {
   const session = await getServerSession(authOptions)
   const accessToken = session?.token as string
 
   const res = (await postService.editPost(accessToken, postId, data)) as IPost
-  console.log('🚀res---->', res)
 
   if (res.id) {
     revalidateTag('list-posts')
@@ -38,15 +40,23 @@ export async function editPostAction(postId: string, data: IEditPostPayload) {
   }
 }
 
+// DELETE POST BY ID
 export async function deletePostAction(postId: string) {
   const session = await getServerSession(authOptions)
   const accessToken = session?.token as string
 
-  const res = await postService.deletePost(accessToken, postId)
-  console.log('🚀res---->', res)
+  try {
+    const res = (await postService.deletePost(
+      accessToken,
+      postId
+    )) as NoContentResponse
 
-  // if (res.id) {
-  //   revalidateTag('list-posts')
-  //   return res
-  // }
+    if (res.statusCode === HTTP_STATUS_CODES.NO_CONTENT.statusCode) {
+      const messageSuccess = `Deleted with postId=${postId} is successfully`
+      revalidateTag('list-posts')
+      return messageSuccess
+    }
+  } catch (error) {
+    throw error
+  }
 }

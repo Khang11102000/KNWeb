@@ -14,4 +14,7 @@ export interface ICreatePostPayload {
   photo?: string
 }
 
-export interface IEditPostPayload extends ICreatePostPayload {}
+export interface IEditPostPayload {
+  content?: string
+  photo?: string
+}
