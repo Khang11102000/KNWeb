@@ -127,7 +127,7 @@ export class PostsDocumentRepository implements PostRepository {
       const cloneArray = [userInfo.followings].concat(userInfo.friends);
       const listPost: any[] = [];
       cloneArray.map(async (userId) => {
-        const postObjects = await this.postsModel.find({ 'poster.id': userId }).sort(
+        const postObjects = await this.postsModel.find({ 'poster._id': userId }).sort(
           sortOptions?.reduce(
             (accumulator, sort) => ({
               ...accumulator,

@@ -32,7 +32,7 @@ const userService = {
         Authorization: `${accessToken}`
       }
     })
-  }
+  },
 }
 
 export default userService

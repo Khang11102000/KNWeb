@@ -62,11 +62,14 @@ const actionContainerStyle: React.CSSProperties = {
 
 const MessagePage: React.FC = () => {
   const [userTargetPosition, setUserTargetPosition] = React.useState<number>(0);
+  const [listFriends, setListFriends] = React.useState([]);
+  React.useEffect(() => {
+    
+  }, [])
   const convertDate = (date: Date) => {
     const yyyy = date.getFullYear();
     let mm = date.getMonth() + 1; // Months start at 0!
     let dd = date.getDate();
-
     return (dd < 10 ? '0' : '') + dd + '/' + (mm < 10 ? '0' : '') + mm + '/' + yyyy;
   }
   const handleClickUserListItem = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, position: number) => {

@@ -27,7 +27,7 @@ const postService = {
     })
   },
   deletePost(accessToken: string, postId: string) {
-    return http.delete(`/posts/${postId}`, {
+    return http.delete(`/posts/${postId}`, null,  {
       headers: {
         Authorization: `${accessToken}`
       }
