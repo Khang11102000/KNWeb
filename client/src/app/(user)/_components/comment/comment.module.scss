@@ -1,0 +1,124 @@
+@import '../../../../styles/mixins';
+
+.commentBox {
+  margin-top: 22px;
+  .addCommentForm {
+    .commentInputWrapper {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+
+      .inputWrapper {
+        position: relative;
+        display: flex;
+
+        .sendIcon {
+          @include transform(translateY(calc(-50% - 4px)));
+          @include transition(color var(--duration-time));
+          position: absolute;
+          right: 12px;
+          top: calc(50% + 4px);
+          cursor: pointer;
+          display: flex;
+
+          &:hover {
+            color: var(--primary-color);
+          }
+        }
+      }
+    }
+  }
+
+  .listComment {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .commentItem {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .commentWrapper {
+      width: 100%;
+
+      .contentWrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .content {
+          padding: 16px;
+          border-radius: var(--border-radius-small);
+          background-color: var(--light-page-color);
+          flex: 1;
+
+          .userComment {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .name {
+              color: var(--heading-color);
+              font-size: 1.5rem;
+              font-weight: 600;
+            }
+
+            .time {
+              color: var(--text-link-color);
+              font-size: 1.3rem;
+            }
+          }
+
+          .contentComment {
+            font-size: 1.4rem;
+            color: var(--text-link-color);
+            padding-top: 12px;
+          }
+        }
+
+        .options {
+          cursor: pointer;
+          display: none;
+          @include transition(color var(--duration-time));
+
+          &.active {
+            display: block;
+          }
+
+          &:hover {
+            color: var(--primary-color);
+          }
+        }
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 12px;
+
+        .reply {
+          cursor: pointer;
+          font-size: 1.3rem;
+          @include transition(color var(--duration-time));
+          color: var(--text-link-color);
+
+          &:hover {
+            color: var(--primary-color);
+          }
+        }
+      }
+    }
+  }
+
+  &.replyBox {
+    margin-top: 12px;
+  }
+
+  &.replyList {
+    padding-left: 44px;
+  }
+}

@@ -32,4 +32,37 @@
       }
     }
   }
+
+  // INTERACTIONS
+  .interactWrapper {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    .interactItem {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+
+      .text {
+        @include transition(color var(--duration-time));
+        font-size: 12px;
+        color: var(--text-link-color);
+      }
+
+      .icon {
+        @include transition(var(--duration-time));
+      }
+
+      &:hover {
+        .text {
+          color: var(--primary-text-hover-color);
+        }
+        .icon {
+          color: var(--primary-text-hover-color);
+        }
+      }
+    }
+  }
 }
