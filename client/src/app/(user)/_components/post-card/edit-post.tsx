@@ -1,7 +1,7 @@
 import { editPostAction } from '@/actions/user/post-action'
 import CreatePost from '@/app/(user)/_components/create-post'
 import envConfig from '@/config/environment'
-import { IPost } from '@/types/post-type'
+import { IEditPostPayload, IPost } from '@/types/post-type'
 import { Button, Flex, Form, Input, message, Modal, Space } from 'antd'
 import Image from 'next/image'
 import { ChangeEvent, useEffect, useState } from 'react'
@@ -20,8 +20,6 @@ const EditPost = ({ isOpen, post, _onModalClose }: IEditPostProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [photoPreview, setPhotoPreview] = useState<string>('')
 
-  console.log('🚀photoPreview---->', photoPreview)
-
   // EVENTS HANDLER
   const _onSave = async (values: any) => {
     let payload = {}
@@ -36,6 +34,7 @@ const EditPost = ({ isOpen, post, _onModalClose }: IEditPostProps) => {
       const res = await editPostAction(id, payload)
       if (res?.id) {
         message.success('You have successfully updated the post')
+        _onModalClose()
       }
     } catch (error: any) {
       console.log('🚀error---->', error)
@@ -47,6 +46,17 @@ const EditPost = ({ isOpen, post, _onModalClose }: IEditPostProps) => {
 
   const _onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files?.[0])
+  }
+
+  const _onCancel = () => {
+    _onModalClose()
+
+    form.setFieldsValue({
+      content: post.content,
+      photo: post.photo
+    })
+
+    setPhotoPreview(post.photo as string)
   }
 
   const handleUploadFile = async (file: any) => {
@@ -92,7 +102,13 @@ const EditPost = ({ isOpen, post, _onModalClose }: IEditPostProps) => {
   }, [photo])
 
   return (
-    <Modal title='Edit Post' open={isOpen} centered footer={null}>
+    <Modal
+      title='Edit Post'
+      open={isOpen}
+      centered
+      footer={null}
+      onCancel={_onCancel}
+    >
       <Form
         form={form}
         onFinish={_onSave}
@@ -127,7 +143,7 @@ const EditPost = ({ isOpen, post, _onModalClose }: IEditPostProps) => {
           </>
         )}
         <Flex align='center' gap={12} justify='end' style={{ marginTop: 24 }}>
-          <Button onClick={_onModalClose}>Cancel</Button>
+          <Button onClick={_onCancel}>Cancel</Button>
           <Button type='primary' htmlType='submit'>
             Save
           </Button>

@@ -4,6 +4,7 @@ import ProfileTabs from '@/app/(user)/profile/[id]/profile-tabs'
 import { authOptions } from '@/config/auth-options'
 import postService from '@/services/user/post-service'
 import { IPost } from '@/types/post-type'
+import commentService from '@/services/user/comment-service'
 
 const ProfilePage = async ({ params }: { params: { id: string } }) => {
   const session = await getServerSession(authOptions)

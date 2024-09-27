@@ -77,7 +77,7 @@ const SectionProfileHeader = () => {
   if (status === 'authenticated') {
     const { user } = data
     const { firstName, lastName, photo } = user
-    const fullName = `${lastName} ${firstName}`
+    const fullName = `${firstName} ${lastName}`
     return (
       <>
         <section className={clsx(sectionProfileHeader)}>

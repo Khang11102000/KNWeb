@@ -3,23 +3,37 @@ import { IPost } from '@/types/post-type'
 import { calculateHoursPassed } from '@/utils/helpers'
 import { Avatar, Card, Dropdown, Flex, MenuProps, message, Modal } from 'antd'
 import clsx from 'clsx'
-import { Ellipsis, Pencil, Trash } from 'lucide-react'
+import { Ellipsis, MessageCircle, Pencil, ThumbsUp, Trash } from 'lucide-react'
 import Image from 'next/image'
 import styles from './post-card.module.scss'
 import { deletePostAction, editPostAction } from '@/actions/user/post-action'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 import EditPost from '@/app/(user)/_components/post-card/edit-post'
 import useAuthenticated from '@/hooks/useAuthenticated'
 import authService from '@/services/auth-service'
 import { useSession } from 'next-auth/react'
+import { LikeIcon, MessageIcon } from '@/components/shared/icons'
+import Comment from '@/app/(user)/_components/comment'
+import commentService from '@/services/user/comment-service'
+import { IComment } from '@/types/comment-type'
+import { addCommentAction } from '@/actions/user/comment-action'
 
 interface IPostCardProps {
   post: IPost
 }
 
-const { postCard, timeAgo, contentWrapper, postImageWrapper, postImage } =
-  styles
+const {
+  postCard,
+  timeAgo,
+  contentWrapper,
+  postImageWrapper,
+  postImage,
+  interactWrapper,
+  interactItem,
+  text,
+  icon
+} = styles
 
 const items: MenuProps['items'] = [
   {
@@ -48,11 +62,13 @@ const items: MenuProps['items'] = [
 const { confirm } = Modal
 
 const PostCard = ({ post }: IPostCardProps) => {
-  const params = useParams<{ id: string }>()
-  const { data: session, status } = useSession()
   const [isEditPostOpen, setIsEditPostOpen] = useState<boolean>(false)
+  const [isToggleComment, setIsToggleComment] = useState<boolean>(false)
+  const [comments, setComments] = useState<IComment[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { poster, content, createdAt, photo: postPhoto, id } = post || {}
   const { firstName, lastName, photo } = poster || {}
+  const { data, status } = useSession()
 
   // EVENTS HANDLER
   // HANDLE SHOW EDIT POST MODAL
@@ -65,6 +81,7 @@ const PostCard = ({ post }: IPostCardProps) => {
     setIsEditPostOpen(false)
   }
 
+  // HANDLE SHOW COMFIRM POPUP DELETE
   const showDeleteConfirm = () => {
     confirm({
       title: 'Are you sure delete this post?',
@@ -98,6 +115,50 @@ const PostCard = ({ post }: IPostCardProps) => {
         break
     }
   }
+
+  // HANDLE TOGGLE COMMENTS
+  const _onToggleComment = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    setIsToggleComment((prev) => !prev)
+  }
+
+  // HANDLE ADD COMMENTS
+  const handleAddComment = async (
+    values: any,
+    onSuccess?: () => void,
+    onFailed?: () => void
+  ) => {
+    const payload = { ...values, postId: id }
+    setIsLoading(true)
+    try {
+      const res = await addCommentAction(payload)
+      if (res?.id) {
+        message.success('You have added comment for this post is successfully')
+        onSuccess?.()
+        setComments((prevComments) => [...prevComments, res])
+      }
+    } catch (error) {
+      message.error('Add comment for this post failed. Please, try gain!')
+      onFailed?.()
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      const fetchComments = async () => {
+        const res = (await commentService.getCommentsByPostOrComment(
+          data.token,
+          id
+        )) as IComment[]
+        if (res.length > 0) {
+          setComments([...res])
+        }
+      }
+      fetchComments()
+    }
+  }, [status, data?.token, id])
 
   return (
     <>
@@ -150,12 +211,36 @@ const PostCard = ({ post }: IPostCardProps) => {
                 className={clsx(postImage)}
                 width={534}
                 height={262}
+                priority
               />
             </div>
           )}
         </div>
 
-        {/* COMMENTS */}
+        {/* INTERACTIVE */}
+        <div className={clsx(interactWrapper)}>
+          {/* LIKES */}
+          <div className={clsx(interactItem)}>
+            <LikeIcon classNames={clsx(icon)} />
+            <span className={clsx(text)}>20 Likes</span>
+          </div>
+
+          {/* COMMENTS */}
+          <div className={clsx(interactItem)} onClick={_onToggleComment}>
+            <MessageIcon classNames={clsx(icon)} />
+            <span className={clsx(text)}>{comments.length} Comments</span>
+          </div>
+        </div>
+
+        {/* BOX COMMENT UI */}
+        {isToggleComment && (
+          <Comment
+            isLoading={isLoading}
+            postId={id}
+            comments={comments}
+            onAddComment={handleAddComment}
+          />
+        )}
       </Card>
 
       <EditPost
