@@ -1,11 +1,10 @@
-import clsx from 'clsx'
-import styles from './me-page.module.scss'
 import ProfileTab from '@/app/(user)/me/_components/profile-tab'
-import { getServerSession } from 'next-auth'
 import { authOptions } from '@/config/auth-options'
-import userService from '@/services/user/user-service'
-import { IUser } from '@/types/user-type'
 import authService from '@/services/auth-service'
+import { IUser } from '@/types/user-type'
+import clsx from 'clsx'
+import { getServerSession } from 'next-auth'
+import styles from './me-page.module.scss'
 
 const { wrapper } = styles
 

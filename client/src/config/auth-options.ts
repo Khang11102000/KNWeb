@@ -2,7 +2,11 @@ import envConfig from '@/config/environment'
 import HTTP_STATUS_CODES from '@/constants/http-status-codes'
 import { PUBLIC_ROUTES } from '@/constants/routes'
 import authService from '@/services/auth-service'
-import { ILoginPayload, ILoginResponse } from '@/types/auth-type'
+import {
+  ILoginPayload,
+  ILoginResponse,
+  IRefreshTokenResponse
+} from '@/types/auth-type'
 import { IUser, UserStatusEnum } from '@/types/user-type'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -52,13 +56,26 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      // Persist the OAuth access_token to the token right after
       if (user) {
         token.refreshToken = user.refreshToken
         token.token = user.token
         token.tokenExpires = user.tokenExpires
         token.user = user.user
       }
+
+      const currentTime = Date.now()
+
+      if (currentTime > token.tokenExpires) {
+        // Access token is expired, we will refresh token
+        const newToken = (await authService.refreshToken(
+          token.refreshToken
+        )) as IRefreshTokenResponse
+
+        token.refreshToken = newToken.refreshToken
+        token.token = newToken.token
+        token.tokenExpires = newToken.tokenExpires
+      }
+
       return token
     },
     async session({ session, token }) {

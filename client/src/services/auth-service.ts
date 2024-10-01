@@ -2,6 +2,7 @@ import {
   IEmailConfirmPayload,
   ILoginPayload,
   ILoginResponse,
+  IRefreshTokenResponse,
   IRegisterPayload
 } from '@/types/auth-type'
 import { IUser } from '@/types/user-type'
@@ -44,6 +45,17 @@ const authService = {
         Authorization: `Bearer ${accessToken}`
       }
     })
+  },
+  refreshToken(refreshToken: string) {
+    return http.post<IRefreshTokenResponse>(
+      '/auth/refresh',
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`
+        }
+      }
+    )
   }
 }
 

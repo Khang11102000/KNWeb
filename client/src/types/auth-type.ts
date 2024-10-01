@@ -10,7 +10,7 @@ export interface ILoginResponse {
   errors?: any
   refreshToken: string
   token: string
-  tokenExpires: Date
+  tokenExpires: number
   user: IUser
 }
 
@@ -23,4 +23,10 @@ export interface IRegisterPayload {
 
 export interface IEmailConfirmPayload {
   hash: string
+}
+
+export interface IRefreshTokenResponse {
+  token: string
+  refreshToken: string
+  tokenExpires: number
 }
