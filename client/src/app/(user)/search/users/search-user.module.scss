@@ -1,0 +1,14 @@
+.searchUserPage {
+  .links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .usersList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+  }
+}

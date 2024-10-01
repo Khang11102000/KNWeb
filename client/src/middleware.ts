@@ -10,7 +10,13 @@ const ADMIN_PATHS = [
   '/admin/profile'
 ]
 
-const USER_PATHS = ['/', '/me', '/profile/:path*']
+const USER_PATHS = [
+  '/',
+  '/me',
+  '/profile/:path*',
+  '/search/posts',
+  '/search/users'
+]
 
 export default withAuth(
   async function middleware(request: NextRequestWithAuth) {
@@ -44,6 +50,8 @@ export const config = {
     '/admin/profile',
     '/',
     '/me',
-    '/profile/:path*'
+    '/profile/:path*',
+    '/search/posts',
+    '/search/users'
   ]
 }

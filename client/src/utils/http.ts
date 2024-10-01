@@ -32,6 +32,8 @@ const request = async <Response>(
       statusCode: 204,
       message: 'Success'
     }
+  } else if (res.status === HTTP_STATUS_CODES.UNAUTHORIZED.statusCode) {
+    // Handle logout
   }
 
   return (await res.json()) as Response

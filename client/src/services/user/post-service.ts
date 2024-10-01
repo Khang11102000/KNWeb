@@ -1,3 +1,4 @@
+import { ISearchParams } from '@/types/base-type'
 import { ICreatePostPayload, IEditPostPayload, IPost } from '@/types/post-type'
 import http from '@/utils/http'
 
@@ -28,6 +29,18 @@ const postService = {
   },
   deletePost(accessToken: string, postId: string) {
     return http.delete(`/posts/${postId}`, null, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+  },
+  getPostsByKeyword(
+    accessToken: string,
+    keyword: string
+    // userId?: string,
+    // query?: ISearchParams
+  ) {
+    return http.get(`/posts/key/${keyword}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }

@@ -1,0 +1,14 @@
+.searchPostPage {
+  .links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .postsList {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 30px;
+  }
+}

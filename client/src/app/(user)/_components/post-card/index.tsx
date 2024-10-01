@@ -7,7 +7,7 @@ import { Ellipsis, MessageCircle, Pencil, ThumbsUp, Trash } from 'lucide-react'
 import Image from 'next/image'
 import styles from './post-card.module.scss'
 import { deletePostAction, editPostAction } from '@/actions/user/post-action'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { MouseEvent, useEffect, useState } from 'react'
 import EditPost from '@/app/(user)/_components/post-card/edit-post'
 import useAuthenticated from '@/hooks/useAuthenticated'
@@ -25,6 +25,7 @@ interface IPostCardProps {
 
 const {
   postCard,
+  userName,
   timeAgo,
   contentWrapper,
   postImageWrapper,
@@ -64,11 +65,13 @@ const { confirm } = Modal
 const PostCard = ({ post }: IPostCardProps) => {
   const [isEditPostOpen, setIsEditPostOpen] = useState<boolean>(false)
   const [isToggleComment, setIsToggleComment] = useState<boolean>(false)
+  const [isShowDropdown, setIsShowDropdown] = useState<boolean>(false)
   const [comments, setComments] = useState<IComment[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { poster, content, createdAt, photo: postPhoto, id } = post || {}
   const { firstName, lastName, photo } = poster || {}
   const { data, status } = useSession()
+  const router = useRouter()
 
   // EVENTS HANDLER
   // HANDLE SHOW EDIT POST MODAL
@@ -145,6 +148,14 @@ const PostCard = ({ post }: IPostCardProps) => {
     }
   }
 
+  // HANDLE NAME CLICK
+  const handleNavigateToProfile = (
+    e: MouseEvent<HTMLParagraphElement, globalThis.MouseEvent>
+  ) => {
+    e.stopPropagation()
+    router.push(`/profile/${poster.id}`)
+  }
+
   useEffect(() => {
     if (status === 'authenticated') {
       const fetchComments = async () => {
@@ -160,6 +171,14 @@ const PostCard = ({ post }: IPostCardProps) => {
     }
   }, [status, data?.token, id])
 
+  useEffect(() => {
+    if (status === 'authenticated') {
+      if (data.user.id === poster.id) {
+        setIsShowDropdown(true)
+      }
+    }
+  }, [status, data?.user.id, poster.id])
+
   return (
     <>
       <Card
@@ -174,7 +193,10 @@ const PostCard = ({ post }: IPostCardProps) => {
               }
             />
             <Flex align='center' gap='10px'>
-              <p>{`${firstName} ${lastName}`}</p>
+              <p
+                className={clsx(userName)}
+                onClick={handleNavigateToProfile}
+              >{`${firstName} ${lastName}`}</p>
               <div className={clsx(timeAgo)}>
                 {`${calculateHoursPassed(
                   createdAt?.toString() as string
@@ -184,17 +206,19 @@ const PostCard = ({ post }: IPostCardProps) => {
           </Flex>
         }
         extra={
-          <Dropdown
-            menu={{
-              items,
-              onClick: (info) => {
-                _onDropdownMenuItemClick(info)
-              }
-            }}
-            trigger={['click']}
-          >
-            <Ellipsis style={{ cursor: 'pointer' }} />
-          </Dropdown>
+          isShowDropdown ? (
+            <Dropdown
+              menu={{
+                items,
+                onClick: (info) => {
+                  _onDropdownMenuItemClick(info)
+                }
+              }}
+              trigger={['click']}
+            >
+              <Ellipsis style={{ cursor: 'pointer' }} />
+            </Dropdown>
+          ) : null
         }
       >
         {/* CONTENT */}

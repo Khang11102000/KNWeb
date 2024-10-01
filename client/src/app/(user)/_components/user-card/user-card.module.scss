@@ -1,0 +1,19 @@
+.userCard {
+  padding: 18px 14px;
+  border-radius: var(--border-radius-small);
+  background-color: var(--white-color);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .userInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .userName {
+      font-weight: 600;
+    }
+  }
+}

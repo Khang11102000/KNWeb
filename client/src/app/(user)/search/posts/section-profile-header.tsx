@@ -21,6 +21,24 @@ const {
   avatar
 } = styles
 
+const items = [
+  {
+    key: '1',
+    tabLabel: 'About',
+    tabContent: 'Content of Tab Pane 1'
+  },
+  {
+    key: '2',
+    tabLabel: 'Membership',
+    tabContent: 'Content of Tab Pane 2'
+  },
+  {
+    key: '3',
+    tabLabel: 'Discussion',
+    tabContent: 'Content of Tab Pane 3'
+  }
+]
+
 interface ISectionProfileHeaderProps {
   user: IUser
 }
