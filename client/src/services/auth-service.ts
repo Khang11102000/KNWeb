@@ -4,6 +4,7 @@ import {
   ILoginResponse,
   IRegisterPayload
 } from '@/types/auth-type'
+import { IUser } from '@/types/user-type'
 import http from '@/utils/http'
 
 const authService = {
@@ -29,6 +30,16 @@ const authService = {
   },
   getMe(accessToken: string) {
     return http.get('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      next: {
+        tags: ['me']
+      }
+    })
+  },
+  updateMe(accessToken: string, payload: IUser) {
+    return http.patch<IUser>('/auth/me', payload, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }

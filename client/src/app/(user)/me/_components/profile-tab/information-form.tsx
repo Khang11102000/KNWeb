@@ -1,11 +1,14 @@
 'use client'
+import { updateMe } from '@/actions/user/user-action'
 import envConfig from '@/config/environment'
+import { IUser } from '@/types/user-type'
 import {
   Avatar,
   Button,
   Col,
   Form,
   Input,
+  message,
   Row,
   Space,
   Spin,
@@ -13,20 +16,39 @@ import {
 } from 'antd'
 import clsx from 'clsx'
 import { Pencil } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './profile-tab.module.scss'
+import { any } from 'zod'
 
 const { tabContent, title, informationForm } = styles
 
-const InformationForm = () => {
+interface IInformationFormProps {
+  profile: IUser
+}
+
+const InformationForm = ({ profile }: IInformationFormProps) => {
+  console.log('🚀profile---->', profile)
+  const [form] = Form.useForm()
   const [upLoading, setUpLoading] = useState<boolean>(false)
   const [previewImage, setPreviewImage] = useState<string>('')
-  const [form] = Form.useForm()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { email, firstName, lastName, photo } = profile || {}
 
   /*---------------- Events Handling -----------------*/
-  // Handle Submit
-  const handleSubmit = async (values: any) => {
-    console.log('🚀values---->', values)
+  // Handle Update Profile
+  const handleSubmit = async (values: IUser) => {
+    setIsLoading(true)
+    try {
+      const res = (await updateMe(values)) as IUser
+      if (res.id) {
+        message.success('You updated your profile successfully')
+      }
+    } catch (error: any) {
+      console.log('🚀error---->', error)
+      message.error(error?.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   // Handle Upload Image
@@ -59,6 +81,22 @@ const InformationForm = () => {
       setUpLoading(false)
     }
   }
+
+  // ---------------------- Side Effects ----------------------
+  useEffect(() => {
+    if (Object.keys(profile).length > 0) {
+      form.setFieldsValue({
+        email,
+        firstName,
+        lastName,
+        photo
+      } as IUser)
+
+      if (photo) {
+        setPreviewImage(photo)
+      }
+    }
+  }, [profile])
 
   return (
     <div className={clsx(tabContent)}>
@@ -110,6 +148,19 @@ const InformationForm = () => {
           </Row>
 
           <Row gutter={14}>
+            {/* Email */}
+            <Col span={24}>
+              <Form.Item label='Email' name='email'>
+                <Input
+                  placeholder='nguyenkimquocnam@gmail.com'
+                  size='large'
+                  disabled
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={14}>
             {/* First Name */}
             <Col span={12}>
               <Form.Item label='First Name' name='firstName'>
@@ -125,34 +176,6 @@ const InformationForm = () => {
             </Col>
           </Row>
 
-          <Row gutter={14}>
-            {/* Email */}
-            <Col span={12}>
-              <Form.Item label='Email' name='email'>
-                <Input
-                  placeholder='nguyenkimquocnam@gmail.com'
-                  size='large'
-                  disabled
-                />
-              </Form.Item>
-            </Col>
-
-            {/* Password */}
-            <Col span={12}>
-              <Form.Item label='Password' name='password'>
-                <Input type='password' size='large' disabled />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col span={24}>
-              <Form.Item label='Introduce' name='introduce'>
-                <Input.TextArea rows={4} style={{ resize: 'unset' }} />
-              </Form.Item>
-            </Col>
-          </Row>
-
           <Space>
             <Button
               htmlType='submit'
@@ -161,13 +184,13 @@ const InformationForm = () => {
             >
               Save
             </Button>
-            <Button
+            {/* <Button
               htmlType='button'
               style={{ fontSize: '1.2rem', borderRadius: 4 }}
               danger
             >
               Cancel
-            </Button>
+            </Button> */}
           </Space>
         </Form>
       </Spin>

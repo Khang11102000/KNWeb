@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import accountStyles from './account.module.scss'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
+import { IUser } from '@/types/user-type'
+import authService from '@/services/auth-service'
 
 const { accountWrapper } = accountStyles
 
@@ -12,6 +14,9 @@ const Account = () => {
   const [openDropdownMenu, setOpenDropdownMenu] = useState<boolean>(false)
   const accountDropdownRef = useRef<HTMLDivElement>(null)
   const { data: session, status } = useSession()
+  const [me, setMe] = useState<IUser | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  console.log('🚀me---->', me)
 
   const handleToggleDropdownMenu = (
     e?: React.MouseEvent<HTMLElement, MouseEvent>
@@ -22,6 +27,20 @@ const Account = () => {
 
   const handleCloseDropdownMenu = () => {
     setOpenDropdownMenu(false)
+  }
+
+  const fetchMe = async (accessToken: string) => {
+    try {
+      const res = (await authService.getMe(accessToken)) as IUser
+      if (res.id) {
+        setMe(res)
+      }
+    } catch (error) {
+      console.log('🚀error---->', error)
+      setMe(null)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -38,25 +57,30 @@ const Account = () => {
     return () => window.removeEventListener('click', handleEventClick)
   }, [])
 
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetchMe(session.token)
+    }
+  }, [session?.token, status])
+
   if (status === 'loading') {
     return <Skeleton.Avatar active size={44} />
   }
 
   if (status === 'authenticated') {
-    const { photo } = session.user
     return (
       <div className={clsx(accountWrapper)}>
         <Avatar
           size={44}
           src={
-            photo ||
+            `${me?.photo}` ||
             'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
           }
           onClick={handleToggleDropdownMenu}
           style={{ cursor: 'pointer' }}
         />
         {openDropdownMenu && (
-          <DropdownMenu data={session.user || {}} ref={accountDropdownRef} />
+          <DropdownMenu data={me} ref={accountDropdownRef} />
         )}
       </div>
     )
