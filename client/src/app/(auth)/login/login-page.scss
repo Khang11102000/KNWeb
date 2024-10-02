@@ -19,4 +19,19 @@
   .ant-input {
     width: 100%;
   }
+
+  .text-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    .description {
+      text-align: center;
+      max-width: 312px;
+      font-size: 1.4rem;
+      color: var(--text-link-color);
+    }
+  }
 }

@@ -1,5 +1,6 @@
 'use client'
 import { RULES } from '@/constants/messages'
+import { ADMIN_ROLE, USER_ROLE } from '@/constants/role'
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
 import authService from '@/services/auth-service'
 import { ILoginPayload } from '@/types/auth-type'
@@ -9,7 +10,7 @@ import { Button, Flex, Form, Input, message, notification, Spin } from 'antd'
 import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const LoginForm = () => {
   const router = useRouter()
@@ -17,7 +18,7 @@ const LoginForm = () => {
   const { data: session, status } = useSession()
 
   // Handle Login
-  const onFinish: FormProps<ILoginPayload>['onFinish'] = async (values) => {
+  const handleLogin: FormProps<ILoginPayload>['onFinish'] = async (values) => {
     setLoading(true)
     try {
       const res = await signIn('credentials', {
@@ -28,7 +29,6 @@ const LoginForm = () => {
 
       if (!res?.error) {
         message.success('Login is successfully')
-        router.push(PRIVATE_ROUTES.ADMIN.DASHBOARD)
       } else {
         throw res.error
       }
@@ -48,11 +48,21 @@ const LoginForm = () => {
     }
   }
 
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      if (session.user.role.id === ADMIN_ROLE.code) {
+        router.push(PRIVATE_ROUTES.ADMIN.DASHBOARD)
+      } else if (session.user.role.id === USER_ROLE.code) {
+        router.push(PUBLIC_ROUTES.HOME)
+      }
+    }
+  }, [session, router, status])
+
   return (
     <Spin spinning={loading}>
       <Form
         layout='vertical'
-        onFinish={onFinish}
+        onFinish={handleLogin}
         autoComplete='off'
         className='login-form'
       >
@@ -95,7 +105,7 @@ const LoginForm = () => {
         </Form.Item>
 
         <Flex justify='center' align='center' gap={4}>
-          <span>Do not have an account?</span>
+          <span>{`Don't have an account?`}</span>
           <Link href={PUBLIC_ROUTES.REGISTER}>Register</Link>
         </Flex>
       </Form>

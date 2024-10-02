@@ -16,7 +16,6 @@ const Account = () => {
   const { data: session, status } = useSession()
   const [me, setMe] = useState<IUser | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  console.log('🚀me---->', me)
 
   const handleToggleDropdownMenu = (
     e?: React.MouseEvent<HTMLElement, MouseEvent>

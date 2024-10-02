@@ -1,5 +1,6 @@
 import envConfig from '@/config/environment'
 import HTTP_STATUS_CODES from '@/constants/http-status-codes'
+import authService from '@/services/auth-service'
 import { RequestCustomOptions } from '@/types/http-type'
 
 const request = async <Response>(
@@ -33,7 +34,7 @@ const request = async <Response>(
       message: 'Success'
     }
   } else if (res.status === HTTP_STATUS_CODES.UNAUTHORIZED.statusCode) {
-    // Handle logout
+    console.log('Handle logout')
   }
 
   return (await res.json()) as Response

@@ -1,7 +1,7 @@
 'use client'
-import { Breadcrumb, Layout } from 'antd'
-import { ReactNode } from 'react'
 import { AdminFooter, AdminHeader, AdminSidebar } from '@/components/layouts'
+import { Layout } from 'antd'
+import { ReactNode } from 'react'
 
 const { Content } = Layout
 

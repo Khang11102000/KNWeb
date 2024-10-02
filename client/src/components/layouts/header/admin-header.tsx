@@ -10,6 +10,7 @@ import {
   Dropdown,
   Flex,
   Layout,
+  message,
   notification,
   theme,
   Typography
@@ -38,19 +39,13 @@ const AdminHeader = () => {
         if (res.statusCode === HTTP_STATUS_CODES.UNAUTHORIZED.statusCode) {
           throw new Error(res.message)
         } else {
-          signOut({ redirect: false })
-          notification.success({
-            message: res.message || 'Success',
-            description: 'Logout is successfully'
-          })
-          router.push(PUBLIC_ROUTES.HOME)
+          await signOut({ redirect: false })
+          message.success('Logout is successfully')
+          router.push(PUBLIC_ROUTES.LOGIN)
         }
       }
     } catch (error) {
-      notification.error({
-        message: 'Error',
-        description: 'Logout Failed'
-      })
+      message.error('Logout is failed. Please, try again!')
     }
   }
 

@@ -1,6 +1,6 @@
 'use client'
 import { ADMIN_ROLE } from '@/constants/role'
-import { PUBLIC_ROUTES } from '@/constants/routes'
+import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -12,7 +12,11 @@ const useAuthenticated = () => {
   useEffect(() => {
     if (status === 'loading') return
     if (session) {
-      router.push(PUBLIC_ROUTES.HOME)
+      if (session.user.role.id === ADMIN_ROLE.code) {
+        router.push(PRIVATE_ROUTES.ADMIN.DASHBOARD)
+      } else {
+        router.push(PUBLIC_ROUTES.HOME)
+      }
     }
   }, [session, status, router])
 

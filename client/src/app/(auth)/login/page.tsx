@@ -1,20 +1,16 @@
 import LoginForm from '@/app/(auth)/login/login-form'
-import { Flex } from 'antd'
-import Image from 'next/image'
+import Logo from '@/components/shared/logo'
 import './login-page.scss'
 
 const LoginPage = () => {
   return (
     <div className='login-page'>
-      <Flex align='center' justify='center'>
-        <Image
-          src='/img/logo-instagram.svg'
-          alt='Logo Instagram'
-          width={102}
-          height={28}
-        />
-        <h1 style={{ display: 'none' }}>Instagram</h1>
-      </Flex>
+      <div className='text-box'>
+        <Logo />
+        <p className='description'>
+          Welcome to KNWeb, a platform to connect with the social world
+        </p>
+      </div>
       <LoginForm />
     </div>
   )
