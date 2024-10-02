@@ -33,10 +33,10 @@ export class MailService {
     const url = new URL(
       this.configService.getOrThrow('app.frontendDomain', {
         infer: true,
-      }) + '/confirm-email',
+      }) + '/email-verify',
     );
     url.searchParams.set('hash', mailData.data.hash);
-    console.log("hash: ", mailData.data.hash)
+    console.log('hash: ', mailData.data.hash);
     await this.mailerService.sendMail({
       to: mailData.to,
       subject: emailConfirmTitle,

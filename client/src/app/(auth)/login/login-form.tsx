@@ -38,7 +38,9 @@ const LoginForm = () => {
       if (errorData?.userStatus === UserStatusEnum.INACTIVED) {
         message.error(errorData?.message)
 
-        // Redirect To Email Verify Page
+        // const confirmEmailRes = await authService.confirmEmail()
+
+        // // Redirect To Email Verify Page
         router.push(PUBLIC_ROUTES.EMAIL_VERIFY)
       } else {
         message.error('Login Failed')

@@ -2,4 +2,16 @@
   padding: 46px 40px 26px;
   border: 1px solid rgb(219, 219, 219);
   border-radius: 10px;
+
+  .title {
+    font-size: 2.4rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .description {
+    font-size: 1.4rem;
+    color: var(--text-link-color);
+  }
 }

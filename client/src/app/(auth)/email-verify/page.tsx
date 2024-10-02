@@ -4,8 +4,8 @@ import './email-verify-page.scss'
 const EmailVerifyPage = () => {
   return (
     <div className='email-verify-page'>
-      <h1>Active Your Account</h1>
-      <p>
+      <h1 className='title'>Active Your Account</h1>
+      <p className='description'>
         Code verify account sent to your email. Please, check your email
         address.
       </p>
