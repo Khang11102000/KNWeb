@@ -4,25 +4,13 @@ import { now, HydratedDocument } from 'mongoose';
 // We use class-transformer in schema and domain entity.
 // We duplicate these rules because you can choose not to use adapters
 // in your project and return an schema entity directly in response.
-import { Exclude, Expose, Type } from 'class-transformer';
-import { AuthProvidersEnum } from '../../../../../auth/auth-providers.enum';
-import { FileSchemaClass } from '../../../../../files/infrastructure/persistence/document/entities/file.schema';
 import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
-import { StatusSchema } from '../../../../../statuses/infrastructure/persistence/document/entities/status.schema';
-import { RoleSchema } from '../../../../../roles/infrastructure/persistence/document/entities/role.schema';
 import { ApiProperty } from '@nestjs/swagger';
-import databaseConfig from 'src/database/config/database.config';
-import { DatabaseConfig } from 'src/database/config/database-config.type';
-import { UserSchema, UserSchemaClass } from 'src/users/infrastructure/persistence/document/entities/user.schema';
+import { UserSchemaClass } from 'src/users/infrastructure/persistence/document/entities/user.schema';
 import { CommentSchemaClass } from 'src/comment/infrastructure/persistence/document/entities/comment.schema';
 
 export type PostSchemaDocument = HydratedDocument<PostSchemaClass>;
 
-// <database-block>
-const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
-  ? String
-  : Number;
-// </database-block>
 @Schema({
   timestamps: true,
   toJSON: {
