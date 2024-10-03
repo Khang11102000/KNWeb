@@ -27,7 +27,7 @@ export class RoomSchemaClass extends EntityDocumentHelper {
     @Prop({ enum: RoomType, default: RoomType.PERSONAL })
     type: RoomType;
 
-    @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: User.name, autopopulate: true }])
+    @Prop([{ type: String, ref: User.name, autopopulate: true }])
     members: User[];
 }
 

@@ -33,6 +33,14 @@ const userService = {
       }
     })
   },
+  getAllFriend(userId: string, accessToken: string, query?: any) {
+    return http.get(`/users/all-friends${userId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+  }
+
 }
 
 export default userService

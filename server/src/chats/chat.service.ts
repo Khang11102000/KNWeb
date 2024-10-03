@@ -11,10 +11,10 @@ export class ChatService {
   ) { }
 
   async create(senderId: string, createChatDto: CreateChatDto) {
-    const createdChat = await this.chatRepository.create(senderId, createChatDto)
+    return await this.chatRepository.create(senderId, createChatDto)
   }
 
   async findAll(roomId: string, getChatDto: GetChatDto) {
-    return this.chatRepository.findAll(roomId, getChatDto);
+    return await this.chatRepository.findAll(roomId, getChatDto);
   }
 }

@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { Room } from './domain/room';
 import { RoomRepository } from './infrastructure/room.repository';
+import { NullableType } from 'src/utils/types/nullable.type';
 
 @Injectable()
 export class RoomsService {
@@ -11,11 +12,14 @@ export class RoomsService {
         private readonly roomRepository: RoomRepository,
     ) { }
 
-    async create(userId: string, createRoomDto: CreateRoomDto) {
-        return await this.roomRepository.create(userId, createRoomDto);
+    async create(createRoomDto: CreateRoomDto) {
+        return await this.roomRepository.create(createRoomDto);
     }
 
     async getByRequest(userId: string) {
         return await this.roomRepository.getByRequest(userId);
+    }
+    async getPersonalRoomByRequest(userId: string, friendId: string): Promise<NullableType<Room>> {
+        return await this.roomRepository.getPersonalRoomByRequest(userId, friendId);
     }
 }
