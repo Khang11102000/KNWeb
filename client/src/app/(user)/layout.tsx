@@ -12,11 +12,11 @@ import userLayoutStyles from './user-layout.module.scss'
 const { userLayout, mainWrapper } = userLayoutStyles
 
 const UserLayout = async ({ children }: { children: ReactNode }) => {
-  const session = await getServerSession(authOptions)
+  // const session = await getServerSession(authOptions)
 
-  if (!session) {
-    redirect(PUBLIC_ROUTES.LOGIN)
-  }
+  // if (!session) {
+  //   redirect(PUBLIC_ROUTES.LOGIN)
+  // }
 
   return (
     <div>

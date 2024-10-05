@@ -20,33 +20,38 @@ export const authOptions: NextAuthOptions = {
         password: {}
       },
       async authorize(credentials) {
-        const payload: ILoginPayload = {
-          email: credentials?.email,
-          password: credentials?.password
+        if (credentials) {
+          const payload = {
+            email: credentials.email,
+            password: credentials.password
+          } as ILoginPayload
+
+          const res = (await authService.loginByEmail(
+            payload
+          )) as ILoginResponse
+
+          // Credentials Invalid Or Not Found
+          if (
+            res.status === HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.statusCode &&
+            Object.keys(res.errors).length > 0
+          ) {
+            throw new Error(JSON.stringify(res.errors))
+          }
+
+          // User Inactive
+          if (res.user.status.id === UserStatusEnum.INACTIVED) {
+            throw new Error(
+              JSON.stringify({
+                userStatus: res.user.status.id,
+                message: 'Email has not been actived'
+              })
+            )
+          }
+
+          await authService.getMe(res.token)
+
+          return res as any
         }
-
-        const res = (await authService.loginByEmail(payload)) as ILoginResponse
-        // Credentials Invalid Or Not Found
-        if (
-          res.status === HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.statusCode &&
-          Object.keys(res.errors).length > 0
-        ) {
-          throw new Error(JSON.stringify(res.errors))
-        }
-
-        // User Inactive
-        if (res.user.status.id === UserStatusEnum.INACTIVED) {
-          throw new Error(
-            JSON.stringify({
-              userStatus: res.user.status.id,
-              message: 'Email has not been actived'
-            })
-          )
-        }
-
-        await authService.getMe(res.token)
-
-        return res as any
       }
     })
   ],

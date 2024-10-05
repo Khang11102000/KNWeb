@@ -1,8 +1,8 @@
 import { IUser } from '@/types/user-type'
 
 export interface ILoginPayload {
-  email: string | undefined
-  password: string | undefined
+  email: string
+  password: string
 }
 
 export interface ILoginResponse {
