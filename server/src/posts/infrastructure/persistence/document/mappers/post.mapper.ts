@@ -29,6 +29,7 @@ export class PostMapper {
           domainEntity.comments[i].content = cmt.content
           domainEntity.comments[i].createdAt = cmt.createdAt
           domainEntity.comments[i].updatedAt = cmt.updatedAt
+          domainEntity.comments[i].commenter = new User();
           domainEntity.comments[i].commenter.firstName = cmt.commenter.firstName
           domainEntity.comments[i].commenter.lastName = cmt.commenter.lastName
           domainEntity.comments[i].commenter.photo = cmt.commenter.photo

@@ -28,7 +28,7 @@ const postService = {
     })
   },
   deletePost(accessToken: string, postId: string) {
-    return http.delete(`/posts/${postId}`, null, {
+    return http.delete(`/posts/${postId}`, null,  {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }

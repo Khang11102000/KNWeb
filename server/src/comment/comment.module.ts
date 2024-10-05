@@ -14,6 +14,6 @@ const infrastructurePersistenceModule =  DocumentCommentPersistenceModule;
   imports: [infrastructurePersistenceModule, FilesModule],
   controllers: [CommentController],
   providers: [CommentService],
-  exports: [CommentService, infrastructurePersistenceModule, CommentService],
+  exports: [CommentService, infrastructurePersistenceModule],
 })
 export class CommentModule {}
