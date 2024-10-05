@@ -15,7 +15,6 @@ const { header, container, logoContainer, toggleSidebar, searchInput } =
 const Header = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const pathname = usePathname()
 
   const handleSearch = (keyword: string) => {
     const params = new URLSearchParams(searchParams)

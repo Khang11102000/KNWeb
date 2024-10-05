@@ -10,7 +10,7 @@ import type { FormProps } from 'antd'
 import { Button, Flex, Form, Input, message, notification, Spin } from 'antd'
 import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const LoginForm = () => {
