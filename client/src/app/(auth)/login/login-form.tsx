@@ -1,16 +1,13 @@
 'use client'
 import Logo from '@/components/shared/logo'
 import { RULES } from '@/constants/messages'
-import { ADMIN_ROLE, USER_ROLE } from '@/constants/role'
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
-import authService from '@/services/auth-service'
+import { PUBLIC_ROUTES } from '@/constants/routes'
 import { ILoginPayload } from '@/types/auth-type'
 import { RoleEnum, UserStatusEnum } from '@/types/user-type'
-import type { FormProps } from 'antd'
-import { Button, Flex, Form, Input, message, notification, Spin } from 'antd'
+import { App, Button, Flex, Form, Input, message, Spin } from 'antd'
 import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const LoginForm = () => {
@@ -18,6 +15,7 @@ const LoginForm = () => {
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { data: session, status } = useSession()
+  // const { message } = App.useApp()
 
   const handleLogin = async (values: ILoginPayload) => {
     setIsLoading(true)
@@ -31,7 +29,6 @@ const LoginForm = () => {
 
       if (!res?.error) {
         message.success('Login is successfully')
-        router.push
       } else {
         throw res.error
       }

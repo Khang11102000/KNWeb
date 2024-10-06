@@ -12,19 +12,20 @@ export enum RoleEnum {
 
 export interface IUser extends IBase {
   id?: string
-  email: string
+  email?: string
   password?: string
   provider?: string
   photo?: string | null
   socialId?: null
   firstName: string
   lastName: string
-  role: {
+  role?: {
     id: string
   }
-  status: {
+  status?: {
     id: UserStatusEnum
   }
+  friends?: string[]
 }
 
 export interface IGetUserResponse {
