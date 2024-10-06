@@ -8,16 +8,35 @@ import userLayoutStyles from './user-layout.module.scss'
 import { usePathname } from 'next/navigation'
 import ListFriend from '@/app/(user)/_components/list-friend'
 
-const { userLayout, mainWrapper } = userLayoutStyles
+const {
+  userLayout,
+  mainWrapper,
+  isMessageLayout,
+  headerMessage,
+  logoMessage,
+  containerMessage
+} = userLayoutStyles
 
 const UserLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
 
   return (
     <div>
-      <Header />
-      <main className={clsx(userLayout, mainWrapper)}>
-        <Sidebar />
+      <Header
+        classNames={clsx(pathname === '/message' && headerMessage)}
+        logoClassNames={clsx(pathname === '/message' && logoMessage)}
+        headerContainerClassNames={clsx(
+          pathname === '/message' && containerMessage
+        )}
+      />
+      <main
+        className={clsx(
+          userLayout,
+          mainWrapper,
+          pathname === '/message' && isMessageLayout
+        )}
+      >
+        {pathname !== '/message' && <Sidebar />}
         <div style={{ display: 'flex', gap: 26 }}>
           <Suspense fallback={<Loading />}>
             <div style={{ flex: 1 }}>{children}</div>
