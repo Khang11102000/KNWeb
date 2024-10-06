@@ -3,7 +3,7 @@
 .userLayout {
   width: calc(100% - var(--w-sidebar));
   margin-left: auto;
-  padding: calc(var(--h-header) + 42px) 148px 20px 148px;
+  padding: calc(var(--h-header) + 42px) 40px 20px 40px;
 
   @include sm {
     width: 100%;
