@@ -108,9 +108,10 @@ export class AuthService {
   }
   async handleVerifyToken(token) {
     try {
-      const payload = this.jwtService.verifyAsync(token, {
+      const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.AUTH_JWT_SECRET
       });
+      console.log(payload)
       return payload['id'];
     } catch (error) {
       console.log(error)

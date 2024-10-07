@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Avatar, Button, Divider, Flex, Layout, List, Typography, Input } from 'antd';
+import { Avatar, Button, Divider, Flex, Layout, List, Typography, Input, Badge } from 'antd';
 import { SmileOutlined, SendOutlined } from '@ant-design/icons';
 import { io, Socket } from 'socket.io-client';
 import messageService from '@/services/user/message-service';
@@ -53,7 +53,7 @@ const MessagePage: React.FC = () => {
     extraHeaders: {
       Authorization: `Bearer ${session?.token}`
     },
-
+    
   });
 
   React.useEffect(() => {
@@ -63,6 +63,7 @@ const MessagePage: React.FC = () => {
     }
     else {
       socket.on('disconnect', function () {
+
       });
     }
   }, [])
@@ -91,21 +92,23 @@ const MessagePage: React.FC = () => {
   React.useMemo(() => {
     if (!messageParagraphInfo.room_id) {
       socket.on('new-room', (room => {
+        console.log(room)
         setMessageParagraphInfo({
           ...messageParagraphInfo,
           room_id: room
         })
       }))
     }
-  }, [socket])
-  React.useMemo(() => {
     socket.on('new-chat', (chat => {
+      console.log(chat)
       setMessageParagraphInfo({
         ...messageParagraphInfo,
         messageParagraph: [...messageParagraphInfo.messageParagraph, chat]
       })
     }))
-
+    socket.on('user-online', (users => {
+      console.log("Online", users)
+    }))
   }, [socket])
 
   const convertDate = (date: Date) => {
@@ -126,16 +129,19 @@ const MessagePage: React.FC = () => {
     setReceiver({ ...receiverTarget });
     e.preventDefault()
     messageService.getPersonalRoom(token, receiverTarget.id).then(room => {
+      console.log("Room", room)
       if (room) {
-        socket.on('connection', sk => {
-          sk.join((room as any).id);
-        });
-        messageService.getAllChat(token, (room as any).id).then((res: any) => {
+        const roomId = (room as any).id
+        // socket.on('connection', sk => {
+        //   sk.join(roomId);
+        // });
+        messageService.getAllChat(token, roomId).then((res: any) => {
+          console.log("all chat:" ,res)
           if (res) {
             setMessageParagraphInfo({
               ...messageParagraphInfo,
               messageParagraph: (res as MessageParagraph[]),
-              room_id: (room as any).id
+              room_id: roomId
             })
           }
           else setMessageParagraphInfo({ ...messageParagraphInfo, messageParagraph: [] })
@@ -159,9 +165,9 @@ const MessagePage: React.FC = () => {
         members: [userId, receiver.id],
         type: 'personal'
       }).then(res => {
-        socket.on('connection', sk => {
-          sk.join((res as any).id);
-        });
+        // socket.on('connection', sk => {
+        //   sk.join((res as any).id);
+        // });
         socket.emit('create', { room_id: (res as any).id, content: messageText })
         socket.emit('new-room', { room: (res as any).id, receiver: receiver.id })
       })
@@ -172,7 +178,7 @@ const MessagePage: React.FC = () => {
 
   return (
     <Flex gap="middle" wrap justify='center' align='center' style={{ height: '100vh' }}>
-      <Header/>
+      <Header />
       <Layout style={layoutStyle}>
         <Sider width={350} theme='light' style={siderStyle}>
           <Flex style={activeChatStyle}>
@@ -199,7 +205,10 @@ const MessagePage: React.FC = () => {
                     )}>
                     <Flex justify='center' align='center'>
                       <Flex justify='center' align='center'>
-                        <Avatar size={48} />
+                        <Badge dot color={"#08ff14"}>
+                          <Avatar size={48} src={user.avt}/>
+                        </Badge>
+
                       </Flex>
                       <Flex vertical justify='center' align='start' style={{ marginLeft: '5px' }}>
                         <Typography.Title level={5}>{user.firstName} {user.lastName}</Typography.Title>
@@ -259,12 +268,13 @@ const MessagePage: React.FC = () => {
             </Flex>
           </Flex>
           <Flex style={actionContainerStyle} justify='space-around' align='center'>
-            <Input size="large" placeholder="Basic usage" style={{ width: 'calc(100% - 90px)' }} addonAfter={<SmileOutlined />} onChange={handleChangeMessage}
+            <Input size="large" placeholder="Basic usage" style={{ width: 'calc(100% - 90px)' }} addonAfter={<SmileOutlined />} onChange={handleChangeMessage} value={messageText}
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === 'Enter') {
                   return sendMessage
 
-                }}} />
+                }
+              }} />
             <Button type="primary" shape="circle" size='large' icon={<SendOutlined />} onClick={sendMessage} />
           </Flex>
         </Layout>

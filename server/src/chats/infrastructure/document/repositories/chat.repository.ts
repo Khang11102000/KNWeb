@@ -25,7 +25,6 @@ export class ChatDocumentRepository implements ChatRepository {
       ...createChatDto,
       sender_id: senderId,
     });
-    console.log("created Chat:", createChatDto)
     const chatObject = await createdChat.save()
     return ChatMapper.toDomain(chatObject);
   }
@@ -38,7 +37,7 @@ export class ChatDocumentRepository implements ChatRepository {
     if (getChatDto.last_id) {
       query['_id'] = { $lt: getChatDto.last_id };
     }
-    const chatObjects = await this.chatModel.find(query).sort({ createdAt: -1 }).limit(getChatDto.limit)
+    const chatObjects = await this.chatModel.find(query).sort({ createdAt: -1 }).limit(getChatDto.limit);
     return chatObjects.map((chatObject) => ChatMapper.toDomain(chatObject));
   }
 

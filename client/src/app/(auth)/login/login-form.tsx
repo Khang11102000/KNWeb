@@ -51,7 +51,7 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-    if (status === 'authenticated' && session) {
+    if (status === 'authenticated' && session?.token) {
       if (session.user.role.id === ADMIN_ROLE.code) {
         router.push(PRIVATE_ROUTES.ADMIN.DASHBOARD)
       } else if (session.user.role.id === USER_ROLE.code) {
