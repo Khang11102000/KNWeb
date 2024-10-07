@@ -1,21 +1,29 @@
 'use client'
-
 import Account from '@/app/(user)/_components/account'
-import headerStyles from './header.module.scss'
 import Logo from '@/components/shared/logo'
 import { Menu } from 'lucide-react'
 import clsx from 'clsx'
 import SearchInput from '@/components/shared/search-input'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { PRIVATE_ROUTES } from '@/constants/routes'
+import headerStyles from './header.module.scss'
 
 const { header, container, logoContainer, toggleSidebar, searchInput } =
   headerStyles
 
-const Header = () => {
+interface IHeaderProps {
+  classNames?: string
+  headerContainerClassNames?: string
+  logoClassNames?: string
+}
+
+const Header = ({
+  classNames,
+  logoClassNames,
+  headerContainerClassNames
+}: IHeaderProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const pathname = usePathname()
 
   const handleSearch = (keyword: string) => {
     const params = new URLSearchParams(searchParams)
@@ -30,9 +38,9 @@ const Header = () => {
   }
 
   return (
-    <header className={clsx(header)}>
-      <div className={clsx(container)}>
-        <div className={clsx(logoContainer)}>
+    <header className={clsx(header, classNames)}>
+      <div className={clsx(container, headerContainerClassNames)}>
+        <div className={clsx(logoContainer, logoClassNames)}>
           <Logo />
           <Menu
             style={{ cursor: 'pointer', color: '#2f65b9' }}

@@ -18,17 +18,10 @@ const USER_PATHS = [
   '/search/users'
 ]
 
-const PUBLIC_PATHS = ['/login', '/register']
+// const PUBLIC_PATHS = ['/login', '/register']
 
 export default withAuth(
   async function middleware(request: NextRequestWithAuth) {
-    if (
-      PUBLIC_PATHS.some((path) => path === request.nextUrl.pathname) &&
-      request.nextauth.token?.token
-    ) {
-      return NextResponse.redirect(new URL('/', request.url))
-    }
-
     if (
       (ADMIN_PATHS.some((path) => path === request.nextUrl.pathname) &&
         request.nextauth.token?.user.role.id !== ADMIN_ROLE.code) ||
@@ -66,8 +59,5 @@ export const config = {
     '/profile/:path*',
     '/search/posts',
     '/search/users'
-    // '/login',
-    // '/register'
-    // '/permission-denied'
   ]
 }

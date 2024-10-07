@@ -1,12 +1,16 @@
 import { Spin } from 'antd'
-import styles from './loading.module.scss'
 import clsx from 'clsx'
+import styles from './loading.module.scss'
 
 const { loadingWrapper } = styles
 
-const Loading = () => {
+interface ILoadingProps {
+  classNames?: string
+}
+
+const Loading = ({ classNames = '' }: ILoadingProps) => {
   return (
-    <div className={clsx(loadingWrapper)}>
+    <div className={clsx(loadingWrapper, classNames)}>
       <Spin />
     </div>
   )

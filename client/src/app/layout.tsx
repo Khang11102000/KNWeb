@@ -2,7 +2,7 @@ import NextAuthProvider from '@/context/nextauth-provider'
 import '@/styles/globals.scss'
 import theme from '@/utils/theme'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
-import { ConfigProvider, notification } from 'antd'
+import { App, ConfigProvider } from 'antd'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 
@@ -25,11 +25,11 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={plusJakartaSans.className} suppressHydrationWarning>
-        <ConfigProvider theme={theme}>
-          <NextAuthProvider>
-            <AntdRegistry>{children}</AntdRegistry>
-          </NextAuthProvider>
-        </ConfigProvider>
+        <NextAuthProvider>
+          <AntdRegistry>
+            <ConfigProvider theme={theme}>{children}</ConfigProvider>
+          </AntdRegistry>
+        </NextAuthProvider>
       </body>
     </html>
   )

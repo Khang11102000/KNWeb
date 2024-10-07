@@ -1,12 +1,10 @@
 'use client'
+import Logo from '@/components/shared/logo'
 import { RULES } from '@/constants/messages'
-import { ADMIN_ROLE, USER_ROLE } from '@/constants/role'
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants/routes'
-import authService from '@/services/auth-service'
+import { PUBLIC_ROUTES } from '@/constants/routes'
 import { ILoginPayload } from '@/types/auth-type'
-import { UserStatusEnum } from '@/types/user-type'
-import type { FormProps } from 'antd'
-import { Button, Flex, Form, Input, message, notification, Spin } from 'antd'
+import { RoleEnum, UserStatusEnum } from '@/types/user-type'
+import { App, Button, Flex, Form, Input, message, Spin } from 'antd'
 import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -14,16 +12,18 @@ import { useEffect, useState } from 'react'
 
 const LoginForm = () => {
   const router = useRouter()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [form] = Form.useForm()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { data: session, status } = useSession()
+  // const { message } = App.useApp()
 
-  // Handle Login
-  const handleLogin: FormProps<ILoginPayload>['onFinish'] = async (values) => {
-    setLoading(true)
+  const handleLogin = async (values: ILoginPayload) => {
+    setIsLoading(true)
+    const { email, password } = values || {}
     try {
       const res = await signIn('credentials', {
-        email: values.email,
-        password: values.password,
+        email,
+        password,
         redirect: false
       })
 
@@ -41,32 +41,41 @@ const LoginForm = () => {
         // const confirmEmailRes = await authService.confirmEmail()
 
         // // Redirect To Email Verify Page
-        router.push(PUBLIC_ROUTES.EMAIL_VERIFY)
+        // router.push(PUBLIC_ROUTES.EMAIL_VERIFY)
       } else {
         message.error('Login Failed')
       }
     } finally {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    if (status === 'authenticated' && session?.token) {
-      if (session.user.role.id === ADMIN_ROLE.code) {
-        router.push(PRIVATE_ROUTES.ADMIN.DASHBOARD)
-      } else if (session.user.role.id === USER_ROLE.code) {
-        router.push(PUBLIC_ROUTES.HOME)
+    if (status === 'authenticated') {
+      if (!!session?.token && Object.keys(session?.user).length > 0 && session.user.role) {
+        router.push(
+          `${
+            session.user.role.id === RoleEnum.ADMIN ? '/admin/dashboard' : '/'
+          } `
+        )
       }
     }
   }, [session, router, status])
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={isLoading}>
+      <div className='text-box'>
+        <Logo />
+        <p className='description'>
+          Welcome to KNWeb, a platform to connect with the social world
+        </p>
+      </div>
       <Form
         layout='vertical'
         onFinish={handleLogin}
         autoComplete='off'
         className='login-form'
+        form={form}
       >
         <Form.Item
           label='Email'
