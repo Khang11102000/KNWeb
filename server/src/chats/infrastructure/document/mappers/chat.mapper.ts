@@ -14,12 +14,12 @@ export class ChatMapper {
     return domainEntity;
   }
   static toPersistence(domainEntity: Room): ChatSchemaClass {
-    const roomSchema = new ChatSchemaClass();
-    roomSchema._id = domainEntity.id.toString();
-    const roomEntity = new ChatSchemaClass();
+    const chatSchema = new ChatSchemaClass();
+    chatSchema._id = domainEntity.id.toString();
+    const chatEntity = new ChatSchemaClass();
     if (domainEntity.id && typeof domainEntity.id === 'string') {
-      roomEntity._id = domainEntity.id;
+      chatEntity._id = domainEntity.id;
     }
-    return roomEntity;
+    return chatEntity;
   }
 }

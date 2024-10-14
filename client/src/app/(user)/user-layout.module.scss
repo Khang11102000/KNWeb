@@ -8,6 +8,7 @@
   &.isMessageLayout {
     width: 100%;
     margin-left: unset;
+    padding: 0px;
   }
 
   @include sm {

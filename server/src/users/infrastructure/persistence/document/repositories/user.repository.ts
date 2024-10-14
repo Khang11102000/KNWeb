@@ -89,6 +89,41 @@ export class UsersDocumentRepository implements UserRepository {
       return friendObjects.map((userObject) => UserMapper.toDomain(userObject));
 
     }
+    // userObjects.sort(
+    //   sortOptions?.reduce(
+    //     (accumulator, sort) => ({
+    //       ...accumulator,
+    //       [sort.orderBy === 'id' ? '_id' : sort.orderBy]:
+    //         sort.order.toUpperCase() === 'ASC' ? 1 : -1,
+    //     }),
+    //     {},
+    //   ),
+    // )
+    // .skip((paginationOptions.page - 1) * paginationOptions.limit)
+    // .limit(paginationOptions.limit);
+    return [];
+  }
+  async findAllFollowingsWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, id: User['id']): Promise<User[]> {
+    const user = await this.usersModel.findOne({ '_id': id })
+    if (user && user.friends) {
+      const friendObjects = await this.usersModel.find({ _id: { $in: user.followings } })
+      // user.friends.map(async (fId) => {
+      //   const friendObject = await this.usersModel.findOne({ '_id': fId })
+      //   if (friendObject) {
+      //     userObjects.push(friendObject)
+      //   }
+      // })
+      return friendObjects.map((userObject) => UserMapper.toDomain(userObject));
+
+    }
 
     // userObjects.sort(
     //   sortOptions?.reduce(
@@ -104,7 +139,42 @@ export class UsersDocumentRepository implements UserRepository {
     // .limit(paginationOptions.limit);
     return [];
   }
+  async findAllFollowersWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, id: User['id']): Promise<User[]> {
+    const user = await this.usersModel.findOne({ '_id': id })
+    if (user && user.friends) {
+      const friendObjects = await this.usersModel.find({ _id: { $in: user.followers } })
+      // user.friends.map(async (fId) => {
+      //   const friendObject = await this.usersModel.findOne({ '_id': fId })
+      //   if (friendObject) {
+      //     userObjects.push(friendObject)
+      //   }
+      // })
+      return friendObjects.map((userObject) => UserMapper.toDomain(userObject));
 
+    }
+
+    // userObjects.sort(
+    //   sortOptions?.reduce(
+    //     (accumulator, sort) => ({
+    //       ...accumulator,
+    //       [sort.orderBy === 'id' ? '_id' : sort.orderBy]:
+    //         sort.order.toUpperCase() === 'ASC' ? 1 : -1,
+    //     }),
+    //     {},
+    //   ),
+    // )
+    // .skip((paginationOptions.page - 1) * paginationOptions.limit)
+    // .limit(paginationOptions.limit);
+    return [];
+  }
   async findByKeywordWithPagination({
     filterOptions,
     sortOptions,
@@ -228,8 +298,19 @@ export class UsersDocumentRepository implements UserRepository {
           { "$pull": { "followers": addFriendDto.firstUserId } }
         )
         break;
+      case 'cancelFriend':
+        await this.usersModel.updateOne(
+          { _id: addFriendDto.firstUserId },
+          { "$pull": { "friends": addFriendDto.secondUserId } }
+        )
+        await this.usersModel.updateOne(
+          { _id: addFriendDto.secondUserId },
+          { "$pull": { "friends": addFriendDto.firstUserId } }
+        )
+        break;
     }
   }
+
   async remove(id: User['id']): Promise<void> {
     await this.usersModel.deleteOne({
       _id: id.toString(),

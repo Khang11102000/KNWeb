@@ -110,6 +110,36 @@ export class UsersService {
       paginationOptions,
     }, id);
   }
+  findAllFollowersWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, id: User['id']): Promise<User[]> {
+    return this.usersRepository.findAllFollowersWithPagination({
+      filterOptions,
+      sortOptions,
+      paginationOptions,
+    }, id);
+  }
+  findAllFollowingsWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, id: User['id']): Promise<User[]> {
+    return this.usersRepository.findAllFollowingsWithPagination({
+      filterOptions,
+      sortOptions,
+      paginationOptions,
+    }, id);
+  }
   findById(id: User['id']): Promise<NullableType<User>> {
     return this.usersRepository.findById(id);
   }

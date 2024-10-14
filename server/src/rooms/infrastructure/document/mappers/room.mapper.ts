@@ -8,9 +8,12 @@ export class RoomMapper {
     domainEntity.id = raw._id.toString();
     domainEntity.name = raw.name;
     domainEntity.type = raw.type;
+    domainEntity.avatar = raw.avatar;
+    domainEntity.recentActive = raw.recentActive;
+
+
     if (raw.members) {
       domainEntity.members = [...raw.members as any];
-
     }
     return domainEntity;
   }
@@ -23,6 +26,8 @@ export class RoomMapper {
     }
     roomEntity.name = domainEntity.name;
     roomEntity.type = domainEntity.type;
+    roomEntity.recentActive = domainEntity.recentActive;
+
     return roomEntity;
   }
 }

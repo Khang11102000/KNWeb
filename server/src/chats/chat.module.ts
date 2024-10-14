@@ -14,7 +14,7 @@ const infrastructurePersistenceModule = DocumentChatPersistenceModule;
   imports: [infrastructurePersistenceModule,
     PassportModule, 
     AuthModule, 
-    // RoomsModule,
+    RoomsModule,
     JwtModule.register({})],
   providers: [
     ChatsGateway,

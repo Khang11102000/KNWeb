@@ -27,8 +27,18 @@ export class RoomSchemaClass extends EntityDocumentHelper {
     @Prop({ enum: RoomType, default: RoomType.PERSONAL })
     type: RoomType;
 
-    @Prop([{ type: String, ref: User.name, autopopulate: true }])
-    members: User[];
+    @Prop([{ type: String, 
+        // ref: User.name, autopopulate: true
+     }])
+    members: string[];
+    @Prop({
+        type: String,
+    })
+    avatar: string;
+    @Prop({
+        type: String,
+    })
+    recentActive: Date;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(RoomSchemaClass);

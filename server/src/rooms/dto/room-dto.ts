@@ -2,12 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { RoomType } from '../enums/room-type.enum';
 import { ArrayNotEmpty, IsArray, IsEnum, IsNotEmpty, ValidateIf } from 'class-validator';
 
-export class CreateRoomDto {
+export class RoomDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @ValidateIf(o => o.type != RoomType.PERSONAL)
+    id: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
     name: string;
+
+    @ApiProperty()
+    avatar: string;
 
     @ApiProperty({ required: true })
     @IsArray()
@@ -19,6 +25,4 @@ export class CreateRoomDto {
     @ValidateIf(o => o.type)
     type: RoomType;
 
-    @ApiProperty({ required: true, default: Date.now() })
-    recentActive: Date;
 }

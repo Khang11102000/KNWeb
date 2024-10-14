@@ -62,7 +62,6 @@ const Comment = ({
       form.resetFields()
     })
   }
-
   return (
     <div className={clsx(commentBox, classNames)}>
       {/* FORM ADD A COMMENT */}

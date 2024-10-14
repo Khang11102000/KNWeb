@@ -28,9 +28,16 @@ export class Room {
   type: RoomType;
 
   @ApiProperty({
-    type: Array<User>,
+    type: Array<String>,
   })
-  members: User[];
+  members: string[];
+  @ApiProperty({
+    type: String,
+  })
+  avatar: string;
+
+  @ApiProperty()
+  recentActive: Date;
   
   @ApiProperty()
   createdAt: Date;

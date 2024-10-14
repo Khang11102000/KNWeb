@@ -1,4 +1,3 @@
-import { RoomsService } from './../rooms/rooms.service';
 import {
   WebSocketGateway, SubscribeMessage, MessageBody,
   WebSocketServer, ConnectedSocket, OnGatewayInit,
@@ -11,6 +10,8 @@ import { UseGuards } from '@nestjs/common';
 import { wsAuthMiddleware } from 'src/config/ws-auth.middleware';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'src/auth/auth.service';
+import { RoomsService } from 'src/rooms/rooms.service';
+import { GetChatDto } from './dto/get-chat.dto';
 
 @WebSocketGateway(800, {
   namespace: '/chats',
@@ -21,53 +22,27 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   constructor(
     private readonly chatsService: ChatService,
     private readonly authService: AuthService,
-    // private readonly roomService: RoomsService
+    private readonly roomService: RoomsService
   ) { }
   public userOnline: string[] = []
   @WebSocketServer()
   private server: Server;
   afterInit(client: Socket) {
-    console.log("Init")
     client.use((socket, next) => wsAuthMiddleware(socket, next));
-  }
-  @SubscribeMessage('user-online')
-  async getUserOnline(
-    @ConnectedSocket() client: Socket,
-    room: string
-  ) {
-    this.server
-      .to(room)
-      .emit('user-online', this.userOnline);
-  }
-  @SubscribeMessage('new-room')
-  getNewRoom({ room, receiver }) {
-    this.server
-      .to(room)
-      .emit('new-room', room);
-  }
-  @SubscribeMessage('create')
-  async create(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() createChatDto: CreateChatDto
-  ) {
-    // const senderId = client.handshake.user.id.toString();
-    const senderId = client.handshake.auth.userId.toString();
-
-    const chat = await this.chatsService.create(senderId, createChatDto);
-    this.server
-      .to(createChatDto.room_id)
-      .emit('new-chat', chat);
   }
   async handleConnection(client: Socket) {
     const auth = client.handshake.headers.authorization
     if (auth && auth.split(' ')[1]) {
       try {
         client.data.id = await this.authService.handleVerifyToken(auth.split(' ')[1])
-        if (client?.data?.id) {
-          // const rooms = await this.roomService.getByRequest(client.data.id)
-          // if (rooms && rooms.length > 0) {
-          //   client.join(rooms.map((room) => { return room.id }));
-          // }
+        if (client.data.id) {
+          this.userOnline.push(client.data.id)
+          const rooms = await this.roomService.getByRequest(client.data.id)
+          const roomIds: string[] = [client.data.id]
+          rooms?.map((item) => {
+            roomIds.push(item.id.toString())
+          })
+          client.join([...roomIds])
         }
         else {
           throw (error) => {
@@ -83,9 +58,44 @@ export class ChatsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
       client.disconnect();
     }
   }
+  @SubscribeMessage('user-online')
+  async getUserOnline(
+    @ConnectedSocket() client: Socket,
+  ) {
+    this.server
+      .to(client.data.id)
+      .emit('user-online', this.userOnline);
+  }
+  @SubscribeMessage('get-room')
+  async getRoom(@ConnectedSocket() client: Socket, userId: string) {
+    const rooms = await this.roomService.getByRequest(client.data.id)
+    this.server
+      .to(client.data.id)
+      .emit('room-data', rooms);
+  }
+  @SubscribeMessage('get-message')
+  async getMessage(@ConnectedSocket() client: Socket, @MessageBody() { roomId }) {
+    const messages = await this.chatsService.findAll(roomId, new GetChatDto(null))
+    this.server
+      .to(roomId)
+      .emit('message-data', messages);
+  }
+  @SubscribeMessage('create')
+  async create(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() createChatDto: CreateChatDto
+  ) {
+    // const senderId = client.handshake.user.id.toString();
+    const senderId = client.data.id.toString();
+    const chat = await this.chatsService.create(senderId, createChatDto);
+    await this.roomService.updateActive(createChatDto.room_id);
+    this.server
+      .to(createChatDto.room_id)
+      .emit('new-chat', chat);
+  }
+
   async handleDisconnect(@ConnectedSocket() client: Socket) {
-    // this.userOnline = this.userOnline.filter(item => item !== client.data.id)
-    console.log("Disconnected Socket:", client.id, " _ User:", client.data.id)
+    this.userOnline = this.userOnline.filter(item => item !== client.data.id)
   }
 
 }

@@ -29,6 +29,24 @@ export abstract class UserRepository {
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
   }, id: User['id']): Promise<User[]>;
+  abstract findAllFollowersWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, id: User['id']): Promise<User[]>;
+  abstract findAllFollowingsWithPagination({
+    filterOptions,
+    sortOptions,
+    paginationOptions,
+  }: {
+    filterOptions?: FilterUserDto | null;
+    sortOptions?: SortUserDto[] | null;
+    paginationOptions: IPaginationOptions;
+  }, id: User['id']): Promise<User[]>;
   abstract findById(id: User['id']): Promise<NullableType<User>>;
   abstract findByEmail(email: User['email']): Promise<NullableType<User>>;
   abstract findBySocialIdAndProvider({

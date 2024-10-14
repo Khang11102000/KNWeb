@@ -122,7 +122,69 @@ export class UsersController {
       { page, limit },
     );
   }
-
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(User),
+  })
+  @SerializeOptions({
+    groups: ['admin'],
+  })
+  @Get('all-followers:id')
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  @HttpCode(HttpStatus.OK)
+  async findAllFollowers(
+    @Query() query: QueryUserDto, @Param('id') id: User['id']
+  ): Promise<InfinityPaginationResponseDto<User>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    return infinityPagination(
+      await this.usersService.findAllFollowersWithPagination({
+        filterOptions: query?.filters,
+        sortOptions: query?.sort,
+        paginationOptions: {
+          page,
+          limit,
+        },
+      }, id),
+      { page, limit },
+    );
+  }
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(User),
+  })
+  @Get('all-followings:id')
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  @HttpCode(HttpStatus.OK)
+  async findAllFollowings(
+    @Query() query: QueryUserDto, @Param('id') id: User['id']
+  ): Promise<InfinityPaginationResponseDto<User>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    return infinityPagination(
+      await this.usersService.findAllFollowingsWithPagination({
+        filterOptions: query?.filters,
+        sortOptions: query?.sort,
+        paginationOptions: {
+          page,
+          limit,
+        },
+      }, id),
+      { page, limit },
+    );
+  }
   @ApiOkResponse({
     type: User,
   })

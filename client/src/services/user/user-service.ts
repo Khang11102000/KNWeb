@@ -21,8 +21,28 @@ const userService = {
         Authorization: `Bearer ${accessToken}`
       }
     })
+  },
+  getAllFollowers(userId: string, accessToken: string, query?: any) {
+    return http.get(`/users/all-followers${userId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+  },
+  getAllFollowings(userId: string, accessToken: string, query?: any) {
+    return http.get(`/users/all-followings${userId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+  },
+  addFriend(accessToken: string, payload: any) {
+    return http.post(`/users/add-friend`, payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
   }
-
 }
 
 export default userService

@@ -40,11 +40,15 @@ const SIDEBAR_ITEMS: ISidebarItem[] = [
     subMenu: [
       {
         text: 'Friend list',
-        path: '#friendList'
+        path: '/friendList'
       },
       {
-        text: 'Friend profile',
-        path: '#friendsProfile'
+        text: 'Followings',
+        path: '/following'
+      },
+      {
+        text: 'Followers',
+        path: '/followers'
       }
     ]
   },

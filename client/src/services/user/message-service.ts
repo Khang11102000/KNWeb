@@ -6,6 +6,11 @@ export type RoomType = {
   members: string[],
   type: string
 }
+export type ChatType = {
+  sender_id: string,
+  room_id: string,
+  content: string
+}
 const messageService = {
   createRoom(accessToken: string, payload: RoomType) {
     return http.post('/rooms', payload, {
@@ -16,6 +21,13 @@ const messageService = {
   },
   getRoom(accessToken: string) {
     return http.get(`/rooms`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+    })
+  },
+  getRoomById(accessToken: string, roomId: string) {
+    return http.get(`/rooms/${roomId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       },
@@ -39,7 +51,14 @@ const messageService = {
         Authorization: `Bearer ${accessToken}`
       }
     })
-  }
+  },
+  createChat(accessToken: string, data: ChatType) {
+    return http.post('/rooms/createChat', data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+  },
   
 }
 

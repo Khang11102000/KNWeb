@@ -10,6 +10,7 @@ import ProfileTabs from '@/app/(user)/profile/[id]/profile-tabs'
 import useAuthenticated from '@/hooks/useAuthenticated'
 import { useSession } from 'next-auth/react'
 import { IUser } from '@/types/user-type'
+import userService from '@/services/user/user-service'
 
 const {
   sectionProfileHeader,
@@ -27,8 +28,16 @@ interface ISectionProfileHeaderProps {
 
 const SectionProfileHeader = ({ user }: ISectionProfileHeaderProps) => {
   const { firstName, lastName, photo } = user
+  const { data: session, status } = useSession()
   const fullName = `${firstName} ${lastName}`
 
+  const handleAddFriend = () => {
+    userService.addFriend(session?.token || "", {
+      firstUserId: session?.user.id,
+      secondUserId: user.id,
+      key: "sendFriendRequest"
+    })
+  }
   return (
     <>
       <section className={clsx(sectionProfileHeader)}>
@@ -62,7 +71,7 @@ const SectionProfileHeader = ({ user }: ISectionProfileHeaderProps) => {
 
           {/* Actions */}
           <div>
-            <Button type='primary'>Add Friend</Button>
+            <Button type='primary' onClick={handleAddFriend}>{user.friends?.find((item) => item === session?.user.id) ? 'Add Friend' : 'Friend'}</Button>
           </div>
         </div>
       </section>
